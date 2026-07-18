@@ -68,7 +68,7 @@ Quick Reply 會隨 bot 回覆出現、由 LINE 排成單列橫向捲動；若希
 
 `0010` 是天氣訂閱、`0011` 是 Google Tasks outbound、`0012`／`0013` 是 Calendar inbound、`0014`／`0016` 是 Tasks inbound，`0015`／`0017` 收斂提醒索引，`0018` 將 bot source 啟停狀態移入 Postgres。必須先套用 migration，再部署 6.0。
 
-若啟用 `ENABLE_GOOGLE_TASKS=true`，既有僅授權 Calendar 的帳號必須重新傳送「連結 Google 行事曆」授予 Tasks scope；callback 會自動回填既有未同步任務。
+若啟用 `ENABLE_GOOGLE_TASKS=true`，先確認 Web OAuth client 所屬的同一 Google Cloud project 已啟用 **Google Tasks API**；只有 Tasks scope 不代表 API 已啟用。既有僅授權 Calendar 的帳號必須重新傳送「連結 Google 行事曆」授予 Tasks scope；callback 會自動回填既有未同步任務。若曾因 API 未啟用而失敗，啟用後再次連結，`rc.5` 會安全重排同一 dead sync job，不建立第二筆任務。
 
 ## 啟用每分鐘 worker 與到點提醒
 
@@ -84,7 +84,7 @@ Quick Reply 會隨 bot 回覆出現、由 LINE 排成單列橫向捲動；若希
 
 ## 啟用 Google Calendar
 
-1. 在 Google Cloud 啟用 **Google Calendar API**；要同步任務時也啟用 **Google Tasks API**。設定 External OAuth consent screen。短期測試可加入 test user；長期 Calendar 存取應發布為 **In Production**，否則授權與 refresh token 會在 7 天後到期。少於 100 位使用者的個人用途可暫不送驗證，但首次授權會顯示警告且有 100 位新使用者上限。
+1. 在 Web OAuth client 所屬的同一 Google Cloud project 啟用 **Google Calendar API**；要同步任務時必須另外啟用 **Google Tasks API**，並到「API 和服務 → 已啟用的 API 和服務」確認兩者都存在。設定 External OAuth consent screen。短期測試可加入 test user；長期 Calendar 存取應發布為 **In Production**，否則授權與 refresh token 會在 7 天後到期。少於 100 位使用者的個人用途可暫不送驗證，但首次授權會顯示警告且有 100 位新使用者上限。
 2. 建立 **Web application** OAuth client，Authorized redirect URI 設為 `https://你的正式網域/oauth/google/callback`。
 3. 在 Vercel Production 設定 `GOOGLE_CLIENT_ID`、`GOOGLE_CLIENT_SECRET`、`GOOGLE_OAUTH_REDIRECT_URI`；全部使用 Sensitive env。
 4. 確認 `0004_google_calendar.sql` 已套用；Tasks outbound 另需 `0011`，Tasks inbound 需 `0014`／`0016`，Calendar inbound 另需 `0012`／`0013`。

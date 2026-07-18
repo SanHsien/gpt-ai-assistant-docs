@@ -61,7 +61,7 @@ The application uploads privately and gives LINE a temporary signed URL. Do not 
 
 Migration `0010` adds weather subscriptions, `0011` Google Tasks outbound, `0012`/`0013` Calendar inbound, `0014`/`0016` Tasks inbound, `0015`/`0017` consolidate reminder indexes, and `0018` moves bot-source activation to Postgres. Apply migrations before deploying 6.0.
 
-When enabling `ENABLE_GOOGLE_TASKS=true`, existing Calendar-only users must run "Connect Google Calendar" again to grant the Tasks scope; the callback backfills existing unsynced tasks.
+Before enabling `ENABLE_GOOGLE_TASKS=true`, enable **Google Tasks API** in the same Google Cloud project that owns the Web OAuth client; granting the Tasks scope does not enable the API. Existing Calendar-only users must run "Connect Google Calendar" again to grant the scope. If sync previously failed because the API was disabled, enable it and reconnect; `rc.5` safely revives the same dead sync job without creating another task.
 
 ## Enable the per-minute worker and due reminders
 
@@ -77,7 +77,7 @@ Reminder preferences include the localized commands for pause, resume, and quiet
 
 ## Enable Google Calendar
 
-1. Enable **Google Calendar API** in Google Cloud; also enable **Google Tasks API** when task synchronization is wanted. Configure an External OAuth consent screen. Testing can use an allowlisted test user, but Calendar grants and refresh tokens expire after seven days. Publish a persistent deployment as **In Production**. A personal-use app with fewer than 100 users may remain unverified, with an unverified-app warning and a 100-new-user cap.
+1. In the Google Cloud project that owns the Web OAuth client, enable **Google Calendar API** and separately enable **Google Tasks API** when task synchronization is wanted. Verify both under Enabled APIs and services. Configure an External OAuth consent screen. Testing can use an allowlisted test user, but Calendar grants and refresh tokens expire after seven days. Publish a persistent deployment as **In Production**. A personal-use app with fewer than 100 users may remain unverified, with an unverified-app warning and a 100-new-user cap.
 2. Create a **Web application** OAuth client. Set the authorized redirect URI to `https://your-production-domain/oauth/google/callback`.
 3. Add `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_OAUTH_REDIRECT_URI` to Vercel Production as Sensitive variables.
 4. Verify `0004_google_calendar.sql`; Tasks outbound additionally needs `0011`, Tasks inbound needs `0014`/`0016`, and Calendar inbound needs `0012`/`0013`.

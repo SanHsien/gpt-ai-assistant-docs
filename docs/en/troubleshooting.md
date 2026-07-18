@@ -91,6 +91,8 @@ Confirm the deployment is v5.13.0 and was redeployed. Tasks require `0007_tasks.
 
 This is expected: assistant tasks never create Google Calendar events. Supabase is authoritative. To synchronize Google Tasks on 6.0, apply through migration `0018`, enable `ENABLE_GOOGLE_TASKS` and optionally `ENABLE_GOOGLE_TASKS_INBOUND`, then run "Connect Google Calendar" again to grant the Tasks scope. The callback backfills existing unsynced tasks. Google Tasks keeps only a due date; use an event for exact calendar times.
 
+If LINE says that Google Tasks synchronization was queued but no task appears, verify that **Google Tasks API** is enabled under Enabled APIs and services in the same Google Cloud project as the OAuth client. An OAuth Tasks scope does not enable the API. After fixing this setup error, run "Connect Google Calendar" again; `rc.5` safely revives the same dead sync job without creating a duplicate task.
+
 ## Which week does a Chinese weekday phrase select?
 
 A bare `星期五` or `週五` selects the next matching weekday. `本週`, `這週`, or `這個星期` stays in the current week, while `下週` or `下個星期` selects the next week. An explicit current-week date remains literal even when it has already passed; verify the date on the confirmation card before confirming.

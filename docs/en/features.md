@@ -53,7 +53,7 @@ Capability flags include `ENABLE_IMAGE_GENERATION`, `ENABLE_TRANSCRIPTION`, `ENA
 
 ## Roadmap
 
-`6.0.0-rc.4` implements the durable-only runtime, migration preflight, Postgres bot-source authority, a tested Google provider contract, feature-aware quick replies, the complete `Command` entry point, localized OAuth pages, a Node 24 container healthcheck, and an Express 5/Jest 30/ESLint 10 maintenance baseline. Production migration, Cron, and the rollback round trip passed. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits only for consolidated LINE/Google acceptance. See [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md).
+`6.0.0-rc.5` implements the durable-only runtime, migration preflight, Postgres bot-source authority, Google provider contract, feature-aware quick replies, grouped `Command` entry point, localized OAuth pages, Node 24 container healthcheck, Express 5/Jest 30/ESLint 10 baseline, and safe recovery of dead Google Tasks sync jobs. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for consolidated LINE/Google acceptance.
 
 Real reminder validation confirmed one delivery at the due time, no delivery or backfill while paused, and normal one-time delivery for a new reminder after resuming.
 
@@ -70,7 +70,7 @@ Commercial references inform independently implemented behavior only. No proprie
 
 ## Google Tasks sync
 
-With `ENABLE_GOOGLE_TASKS`, create/complete/reopen/delete is synced outbound to Google Tasks, sharing Google OAuth. With `ENABLE_GOOGLE_TASKS_INBOUND`, Google-side completion/reopen, deletion, title, and notes are reclaimed after a successful incremental poll. Failures never delete the local task; due remains locally authoritative because Google Tasks only preserves a date.
+With `ENABLE_GOOGLE_TASKS`, create/complete/reopen/delete is synced outbound to Google Tasks, sharing Google OAuth. The Google Tasks API must also be enabled separately in the OAuth project's Google Cloud API library. `rc.5` safely revives the same dead sync job after a permanent setup error is fixed and Google is reconnected. With `ENABLE_GOOGLE_TASKS_INBOUND`, Google-side completion/reopen, deletion, title, and notes are reclaimed after a successful incremental poll. Failures never delete the local task; due remains locally authoritative.
 
 Google Tasks due dates preserve the task's local date; exact time remains in Supabase or reminder delivery.
 

@@ -95,7 +95,7 @@ title: 功能與指令
 
 `5.0.0` 完成行程、任務與提醒的 M1 真實 LINE 閉環。到 `5.13.0` 已接上 Google Tasks 雙向同步與授權回填、Google Calendar inbound 同步（刪除回收＋timed 修改＋提醒去重）、每日天氣訂閱、搜尋建行程、語音建行程、多重／週期提醒及 run trace；並修正 Tasks inbound 水位、跨 instance 同步競態、Tasks 跨日與天氣 DST 排程。
 
-`6.0.0-rc.4` 已完成 durable-only runtime、migration preflight、Postgres bot source、Google provider contract、feature-aware Quick Reply、完整 `指令` 入口、OAuth 語系化、Node 24 container healthcheck，以及 Express 5／Jest 30／ESLint 10 維護基線，Production 升級、Cron 與回滾往返也已通過。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
+`6.0.0-rc.5` 已完成 durable-only runtime、migration preflight、Postgres bot source、Google provider contract、feature-aware Quick Reply、完整 `指令` 入口、OAuth 語系化、Node 24 container healthcheck、Express 5／Jest 30／ESLint 10 維護基線，以及 Google Tasks dead sync job 安全恢復。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
 
 提醒實機驗收已證明：正常到點只推播一次；暫停期間到點不推播，恢復後不補發；恢復後新建立的提醒正常送達。
 
@@ -112,7 +112,7 @@ title: 功能與指令
 
 ## Google Tasks 同步（雙向）
 
-`ENABLE_GOOGLE_TASKS`（outbound，`5.3.0`）開啟後，新增／完成／重開／刪除任務會同步到 Google Tasks，與 Google Calendar 共用同一 OAuth。既有僅授權 Calendar 的使用者重新「連結 Google 行事曆」後，callback 會回填既有未同步任務。同步以 task row lock 與 durable job 防止併發重複；Google Tasks notes 會附加 `[gpt-ai-assistant:<本機任務 ID>]` 同步標記，用來找回遠端已建立但本機尚未存回 ID 的任務，避免重試重複建立。失敗只記錄狀態、**本機任務一律保留**。
+`ENABLE_GOOGLE_TASKS`（outbound，`5.3.0`）開啟後，新增／完成／重開／刪除任務會同步到 Google Tasks，與 Google Calendar 共用同一 OAuth。部署者仍必須在同一 Google Cloud project 另行啟用 Google Tasks API；只有 scope 不夠。既有僅授權 Calendar 的使用者重新「連結 Google 行事曆」後，callback 會回填既有未同步任務；`rc.5` 也會在永久設定錯誤排除後安全重排相同 dead job。同步以 task row lock、durable job 與 notes 的穩定標記防止併發或結果不明確重試產生複本。失敗只記錄狀態、**本機任務一律保留**。
 
 `ENABLE_GOOGLE_TASKS_INBOUND`（inbound，`5.9.0`）開啟後，在 Google Tasks 端對 bot 建立的任務所做的**完成／重開、刪除、標題、備註**會回收到 Supabase（以 `updatedMin` 增量輪詢，Google Tasks 無 sync token）。**期限（`due`）不回收**——Google Tasks 只有日期、對回本地會失去精確時間又有時區歧義，精確期限以本地為準。衝突政策對稱 Calendar inbound：本地剛用 bot 改過（尚未推）時讓 outbound 先贏。
 

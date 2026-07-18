@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.5 (2026-07-18)
+
+- Real LINE/Google Tasks acceptance confirmed that granting the Tasks OAuth scope does not enable Google Tasks API. Deployment, configuration, and troubleshooting docs now make the API enablement step explicit.
+- Reconnecting Google after a permanent setup error can safely revive the same dead Tasks sync job without creating a duplicate task.
+
 ## v6.0.0-rc.4 (2026-07-18)
 
 - Upgraded to Express 5.2, Jest 30.4, and ESLint 10 flat config; all 71 suites and 497 tests pass.

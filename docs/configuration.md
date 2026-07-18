@@ -99,7 +99,7 @@ title: 設定
 
 先依序套用 repo 的 `db/migrations/0001`–`0018`；`0014`／`0016` 是 Google Tasks inbound 與安全水位，`0017` 移除提醒的重複索引，`0018` 將 bot source 啟停狀態移入 Postgres。再跑 `npm run db:preflight`；環境變數不會自動執行 migration，改完後必須 Redeploy。Supabase Cron 每分鐘同時處理到點／提前提醒、Google Calendar 同步重試與最終狀態通知、每日天氣訂閱、Calendar 與 Tasks inbound 輪詢；這些 LINE Push 計入 Messaging API 月額度。
 
-Google Tasks 與 Calendar 共用 OAuth。開啟 `ENABLE_GOOGLE_TASKS` 後請重新連結 Google 帳號取得 `tasks` scope；成功 callback 會回填既有未同步任務。Supabase 是任務權威來源；`ENABLE_GOOGLE_TASKS_INBOUND` 另開後為雙向同步，但 Google 端改動的期限（`due`）不回收，精確期限以本地為準。
+Google Tasks 與 Calendar 共用 OAuth，但必須在 Web OAuth client 所屬的同一 Google Cloud project **另外啟用 Google Tasks API**；`tasks` scope 只代表使用者授權，不會啟用 API。開啟 `ENABLE_GOOGLE_TASKS` 後請重新連結 Google 帳號；成功 callback 會回填既有未同步任務。若先前因 API 未啟用而形成 dead job，`rc.5` 會在再次連結時安全重排同一 job。Supabase 是任務權威來源；`ENABLE_GOOGLE_TASKS_INBOUND` 另開後為雙向同步，但 Google 端改動的期限（`due`）不回收，精確期限以本地為準。
 
 功能開關的前置條件與啟用順序如下；任何 Vercel env 變更後都必須 Redeploy：
 

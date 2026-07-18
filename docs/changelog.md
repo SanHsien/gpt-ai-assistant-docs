@@ -4,6 +4,11 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0-rc.5（2026-07-18）
+
+- 真實 LINE／Google Tasks 驗收確認：OAuth Tasks scope 不會自動啟用 Google Tasks API；部署文件、設定與疑難排解現在都把「在同一 Google Cloud project 另行啟用 Tasks API」列為必要前置。
+- 修復永久設定錯誤排除後無法重試同一 Tasks sync job：重新連結 Google 時可安全重排相同 idempotency key 的 dead job，不建立任務複本。
+
 ## v6.0.0-rc.4（2026-07-18）
 
 - 升級 Express 5.2、Jest 30.4 與 ESLint 10 flat config，完整 71 suites／497 tests 通過。
