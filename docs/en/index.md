@@ -12,7 +12,7 @@ actions:
     type: secondary
 features:
   - title: Native LINE experience
-    details: Use text, voice, images, and groups in normal LINE conversations.
+    details: Use text, voice messages, desktop audio files, images, and groups in normal LINE conversations.
   - title: Multimodal AI
     details: Chat, search, image generation, transcription, vision, tasks, Google Calendar events, reminders, and weather.
   - title: Self-hosted cost control
@@ -20,9 +20,9 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.8**.
+This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.9**.
 
-The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.8` builds Calendar inbound cursors from non-expanded recurring series so open-ended recurrences cannot exhaust the Cron runtime. Final `6.0.0` waits for the remaining LINE/Google acceptance checks.
+The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.9` also accepts supported audio-file attachments from LINE desktop and routes them through the same transcription and confirmation flow as mobile voice messages. Final `6.0.0` waits for the remaining LINE/Google acceptance checks.
 
 > An OpenAI Platform API key is required. ChatGPT Plus or Pro does not include API usage and cannot replace the server-side API key through subscription OAuth.
 

@@ -21,8 +21,6 @@ title: 設定
 | `APP_DEBUG` | `false` | 正式環境必須保持 false，避免 prompt 進 log |
 | `APP_PORT` | 3000 | 本機 port |
 | `APP_LANG` | `zh_TW` | `zh_TW`（正式支援）、`zh`、`zh_CN`、`en`、`ja` |
-
-`APP_LANG` 的可選值不代表相同支援等級。`zh_TW` 是唯一完成 Production 與 LINE 驗收的正式語系；`zh`／`zh_CN` 目前都共用繁體字串，沒有獨立簡體中文包；`en`／`ja` 可啟動，主要指令與 Google OAuth 頁面已有翻譯，但天氣格式與自然語言日期／意圖解析仍偏繁中，因此屬實驗性。未知值會在啟動時明確報錯。英文文件站是部署文件翻譯，不代表英文 bot 已完整驗收。
 | `APP_WEBHOOK_PATH` | `/webhook` | webhook path |
 | `APP_API_TIMEOUT` | 9000 ms | 一般 API timeout |
 | `APP_MAX_GROUPS` / `APP_MAX_USERS` | 1000 | 自架容量限制 |
@@ -31,6 +29,8 @@ title: 設定
 | `APP_MAX_PROMPT_AGE` | 0 | prompt TTL 秒數；0 表示停用 |
 | `APP_INIT_PROMPT` | 空 | 額外系統 prompt |
 
+`APP_LANG` 的可選值不代表相同支援等級。`zh_TW` 是唯一完成 Production 與 LINE 驗收的正式語系；`zh`／`zh_CN` 目前都共用繁體字串，沒有獨立簡體中文包；`en`／`ja` 可啟動，主要指令與 Google OAuth 頁面已有翻譯，但天氣格式與自然語言日期／意圖解析仍偏繁中，因此屬實驗性。未知值會在啟動時明確報錯。英文文件站是部署文件翻譯，不代表英文 bot 已完整驗收。
+
 ## 模型
 
 | 變數 | 預設 |
@@ -38,6 +38,7 @@ title: 設定
 | `OPENAI_COMPLETION_MODEL` | `gpt-4o-mini` |
 | `OPENAI_VISION_MODEL` | `gpt-4o` |
 | `OPENAI_TRANSCRIPTION_MODEL` | `gpt-4o-mini-transcribe` |
+| `TRANSCRIPTION_MAX_BYTES` | 26214400（25 MiB） |
 | `OPENAI_IMAGE_GENERATION_MODEL` | `gpt-image-2` |
 | `OPENAI_IMAGE_GENERATION_SIZE` | `1024x1024` |
 | `OPENAI_IMAGE_GENERATION_QUALITY` | `low` |

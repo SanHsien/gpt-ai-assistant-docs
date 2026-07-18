@@ -12,7 +12,7 @@ actions:
     type: secondary
 features:
   - title: LINE 原生使用
-    details: 文字、語音、圖片與群組都在熟悉的 LINE 對話中完成。
+    details: 文字、語音訊息、桌面音訊檔、圖片與群組都在熟悉的 LINE 對話中完成。
   - title: 多模態 AI
     details: 支援對話、搜尋、生圖、語音、圖片理解、任務、Google Calendar 行程、提醒與天氣。
   - title: 自架與成本控制
@@ -20,9 +20,9 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.8**。
+目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.9**。
 
-本專案已上線 Supabase durable queue、文字與**語音**建行程、週期／多重提醒、Google Calendar／Tasks 同步、天氣與從搜尋建立行程。`6.0.0-rc.8` 讓 Calendar inbound 以非展開的 recurring series 建立 sync cursor，避免無截止日週期拖滿 Cron；正式 `6.0.0` 只剩餘下集中 LINE／Google 驗收。
+本專案已上線 Supabase durable queue、文字與**語音**建行程、週期／多重提醒、Google Calendar／Tasks 同步、天氣與從搜尋建立行程。`6.0.0-rc.9` 另支援從 LINE 桌面版傳送音訊檔，走與手機語音訊息相同的轉錄與確認流程；正式 `6.0.0` 只剩餘下集中 LINE／Google 驗收。
 
 > 本專案需要 OpenAI API key。ChatGPT Plus／Pro 訂閱不包含 API 用量，也不能用訂閱 OAuth 取代 server-side API key。
 

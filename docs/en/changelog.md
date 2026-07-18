@@ -4,6 +4,12 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.9 (2026-07-18)
+
+- LINE desktop can attach a supported audio file when native voice recording is unavailable; it uses the same transcription, draft, and confirmation flow as a mobile voice message.
+- Added an audio-extension allowlist and `TRANSCRIPTION_MAX_BYTES`, checking both LINE metadata and the downloaded payload before OpenAI transcription.
+- Documented a repeatable AI-operated LINE PC acceptance workflow and its cleanup boundary.
+
 ## v6.0.0-rc.8 (2026-07-18)
 
 - Production logs proved that rc.7 request/drain budgets were not the full fix: Calendar inbound with `singleEvents=true` expanded an open-ended recurrence into many instances.

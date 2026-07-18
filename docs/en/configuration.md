@@ -23,6 +23,7 @@ Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`,
 | `OPENAI_COMPLETION_MODEL` | `gpt-4o-mini` |
 | `OPENAI_VISION_MODEL` | `gpt-4o` |
 | `OPENAI_TRANSCRIPTION_MODEL` | `gpt-4o-mini-transcribe` |
+| `TRANSCRIPTION_MAX_BYTES` | 26214400 (25 MiB) |
 | `OPENAI_IMAGE_GENERATION_MODEL` | `gpt-image-2` |
 | `OPENAI_IMAGE_GENERATION_SIZE` | `1024x1024` |
 | `OPENAI_IMAGE_GENERATION_QUALITY` | `low` |

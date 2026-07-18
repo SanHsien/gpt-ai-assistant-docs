@@ -11,10 +11,10 @@ title: Features and Commands
 | Chat | Conversation, continue, retry, clear context |
 | Text | Summaries, advice, analysis, English/Japanese translation |
 | Search | SerpAPI web search with a "📎 Sources" list (title/source/date/link; shown only, never fed into the prompt) |
-| Multimodal | LINE voice transcription, vision, GPT Image generation |
+| Multimodal | LINE mobile voice-message and desktop audio-file transcription, vision, GPT Image generation |
 | URLs | Optional SSRF-guarded URL summarization |
 | Groups | Activate/deactivate and optional mention gating |
-| Events | Date-led input, deterministic weekday resolution, durable clarification, confirmed edits, overlap warnings, list, complete, and delete; **voice-created events** (transcribed into the same flow, with the heard text echoed on the confirmation card) |
+| Events | Date-led input, deterministic weekday resolution, durable clarification, confirmed edits, overlap warnings, list, complete, and delete; **voice-created events** (mobile voice messages or desktop audio files use the same transcription and confirmation flow) |
 | Reminders | Due-time LINE Push; all-day events at 09:00, durable retry-key dedup; quiet hours, pause/resume |
 | Google Calendar | OAuth, idempotent durable create/update, per-minute retries, final status delivery, direct list/complete/delete; **bidirectional sync**: inbound sync-token polling reclaims Google-side deletions and timed edits, with reminder dedup to avoid double notifications |
 | Google Tasks | Outbound create/complete/reopen/delete with `ENABLE_GOOGLE_TASKS`; inbound title, notes, status, and deletion with `ENABLE_GOOGLE_TASKS_INBOUND` (shares Calendar OAuth) |
@@ -37,7 +37,7 @@ Task commands include `Add task tomorrow submit report #work`, `My tasks`, and f
 
 Weather: use `Weather Taipei` for current conditions and forecasts; unambiguous Taiwan place shorthand is completed automatically, and natural phrases like `Today's weather in Chiayi` are also recognized (weather intent at the start or end of a message, gated on `ENABLE_WEATHER`). Subscribe to a daily push with `Daily weather Taipei 8`, cancel with `Cancel daily weather`, and list with `My weather subscriptions` (requires `ENABLE_WEATHER_PUSH`). For same-name places (e.g. Chiayi City vs County), the bot returns coordinate-bound options to tap instead of silently picking the first match. Known city/county collisions use deterministic administrative-center fallbacks; otherwise an unavailable provider result asks for a township plus county/country or a nearby city.
 
-Voice-created events: send a LINE voice message such as "Schedule doctor visit tomorrow at 3pm"; it is transcribed and runs the same draft/confirm flow, and the confirmation card echoes "🎤 Heard: ..." so you can verify the transcription.
+Voice-created events: on mobile, send a LINE voice message such as "Schedule doctor visit tomorrow at 3pm". Because LINE desktop does not provide native voice recording, attach a supported `.mp3`, `.mp4`, `.mpeg`, `.mpga`, `.m4a`, `.wav`, or `.webm` file instead. Both inputs use the same transcription and draft/confirm flow, and the confirmation card echoes the heard text. `TRANSCRIPTION_MAX_BYTES` defaults to 25 MiB.
 
 ## Default models
 
@@ -55,7 +55,7 @@ Capability flags include `ENABLE_IMAGE_GENERATION`, `ENABLE_TRANSCRIPTION`, `ENA
 
 ## Roadmap
 
-`6.0.0-rc.8` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, and non-expanded Calendar series sync. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
+`6.0.0-rc.9` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, non-expanded Calendar series sync, and desktop audio-file transcription. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
 
 Real reminder validation confirmed one delivery at the due time, no delivery or backfill while paused, and normal one-time delivery for a new reminder after resuming.
 

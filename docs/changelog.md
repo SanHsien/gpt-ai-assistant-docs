@@ -4,6 +4,12 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0-rc.9（2026-07-18）
+
+- LINE 桌面版缺少原生語音錄製時，可附加受支援的音訊檔並走與手機語音訊息相同的轉錄、草稿與確認流程。
+- 新增音訊副檔名白名單與 `TRANSCRIPTION_MAX_BYTES`；同時檢查 LINE metadata 與實際下載大小，避免超大檔案進入 OpenAI 轉錄。
+- 補上可由後續 AI 重複執行的 LINE PC 正式驗收流程與清理邊界。
+
 ## v6.0.0-rc.8（2026-07-18）
 
 - 正式 logs 證明 rc.7 的 request timeout／drain budget 仍不足；根因是 Calendar inbound 的 `singleEvents=true` 會把無截止日週期展開成大量 instances。
