@@ -114,7 +114,7 @@ npx eslint .
 npm test
 ```
 
-The repository includes a Node 24 Dockerfile and Compose setup. Create an untracked `.env` from `.env.example`, fill every required value, then run `docker compose up --build`; Compose injects that file and defaults `APP_PORT` to `3000`. The image installs production dependencies only and runs as a non-root user. Containers still require a public HTTPS webhook, Supabase, and the same LINE/OpenAI credentials.
+The repository includes a Node 24 Dockerfile and Compose setup. Create an untracked `.env` from `.env.example`, fill every required value, then run `docker compose up --build --detach`; Compose injects that file and defaults a missing or blank `APP_PORT` to `3000`. The image installs production dependencies only, runs as a non-root user, and includes a `/health/live` healthcheck. Confirm `healthy` with `docker compose ps`, then open `http://127.0.0.1:3000/health/live`. `restart: unless-stopped` only restarts an exited main process; it does not recycle a container solely because it is `unhealthy`, so automatic recovery requires platform/orchestrator monitoring. Containers still require a public HTTPS webhook, Supabase, and the same LINE/OpenAI credentials.
 
 ## Updates
 

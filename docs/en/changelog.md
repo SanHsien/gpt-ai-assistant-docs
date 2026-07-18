@@ -4,6 +4,13 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.4 (2026-07-18)
+
+- Upgraded to Express 5.2, Jest 30.4, and ESLint 10 flat config; all 71 suites and 497 tests pass.
+- `bot-sources` now uses explicit repository injection; production no longer contains an `APP_ENV === 'test'` memory branch.
+- Docker and Compose default a missing or blank `APP_PORT` to `3000`, with `/health/live`, an image healthcheck, and a CI production-image build/run smoke test.
+- LINE commands and durable data contracts are unchanged, so this release does not expand final LINE/Google acceptance scope.
+
 ## v6.0.0-rc.3 (2026-07-18)
 
 - The application repository's public Git history was reinitialized from the current independent snapshot as one root commit; its MIT license, upstream attribution, and product changelog remain intact.

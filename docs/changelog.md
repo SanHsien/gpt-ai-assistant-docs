@@ -4,6 +4,13 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0-rc.4（2026-07-18）
+
+- 升級 Express 5.2、Jest 30.4 與 ESLint 10 flat config，完整 71 suites／497 tests 通過。
+- `bot-sources` 改為明確注入 repository；production 不再含 `APP_ENV === 'test'` 記憶體分支。
+- Docker／Compose 在缺少或空白 `APP_PORT` 時使用 `3000`，新增 `/health/live`、image healthcheck 與 CI production image build/run smoke。
+- 本版不改 LINE 指令或 durable 資料契約；正式 `6.0.0` 的 LINE／Google 集中驗收範圍不因此增加。
+
 ## v6.0.0-rc.3（2026-07-18）
 
 - 主程式 repo 的公開 Git 歷史以目前獨立維護快照重新初始化為單一 root commit；MIT、原作者 attribution 與產品 CHANGELOG 持續保留。

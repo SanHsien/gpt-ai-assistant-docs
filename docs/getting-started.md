@@ -125,7 +125,7 @@ npm test
 
 ## Docker
 
-Repo 保留 Node 24 `Dockerfile` 與 `docker-compose.yaml`。先從 `.env.example` 建立不納入 Git 的 `.env` 並填完必要值，再執行 `docker compose up --build`；Compose 會把 `.env` 注入 container，`APP_PORT` 未設定時使用 `3000`。image 只安裝 production dependencies 並以非 root 使用者執行。Docker 並不免除公開 HTTPS webhook、Supabase、LINE credentials 與 OpenAI API key 的需求。
+Repo 保留 Node 24 `Dockerfile` 與 `docker-compose.yaml`。先從 `.env.example` 建立不納入 Git 的 `.env` 並填完必要值，再執行 `docker compose up --build --detach`；Compose 會把 `.env` 注入 container，`APP_PORT` 未設定或留白時使用 `3000`。image 只安裝 production dependencies、以非 root 使用者執行，並內建 `/health/live` healthcheck。用 `docker compose ps` 確認狀態為 `healthy`，再開啟 `http://127.0.0.1:3000/health/live`。`restart: unless-stopped` 只在主程序退出時重啟，不會單憑 `unhealthy` 自動重啟；需要自動回收時須由部署平台或 orchestrator 監控。Docker 並不免除公開 HTTPS webhook、Supabase、LINE credentials 與 OpenAI API key 的需求。
 
 ## 更新
 

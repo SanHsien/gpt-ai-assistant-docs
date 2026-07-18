@@ -20,9 +20,9 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.3**.
+This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.4**.
 
-The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.3` includes up to 13 feature-aware quick replies, the actual grouped `Command` list, localized Google OAuth pages, a Node 24 runtime baseline, and a working issue-report destination for this independent repository. Production migration, Cron, and the rollback round trip passed; final `6.0.0` now waits only for consolidated LINE/Google acceptance.
+The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.4` includes up to 13 feature-aware quick replies, the actual grouped `Command` list, localized Google OAuth pages, a Node 24 container healthcheck, and an Express 5/Jest 30/ESLint 10 maintenance baseline. Production migration, Cron, and the rollback round trip passed; final `6.0.0` now waits only for consolidated LINE/Google acceptance.
 
 > An OpenAI Platform API key is required. ChatGPT Plus or Pro does not include API usage and cannot replace the server-side API key through subscription OAuth.
 
