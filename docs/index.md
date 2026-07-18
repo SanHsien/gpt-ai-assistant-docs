@@ -20,9 +20,9 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.5**。
+目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.6**。
 
-本專案已上線 Supabase durable queue、文字與**語音**建行程、週期／多重提醒、Google Calendar／Tasks 同步、天氣與從搜尋建立行程。`6.0.0-rc.5` 保留 feature-aware Quick Reply、分組完整「指令」清單、Google OAuth 語系化、Node 24 container healthcheck 與 Express 5／Jest 30／ESLint 10 基線，並補上 Google Tasks API 部署前置與 dead sync job 安全恢復；正式 `6.0.0` 只剩集中 LINE／Google 驗收。
+本專案已上線 Supabase durable queue、文字與**語音**建行程、週期／多重提醒、Google Calendar／Tasks 同步、天氣與從搜尋建立行程。`6.0.0-rc.6` 保留 feature-aware Quick Reply、分組完整「指令」清單、Google OAuth 語系化、Node 24 container healthcheck、Express 5／Jest 30／ESLint 10 與 Tasks 恢復基線，並修正週期行程當地鐘點及可見確認規則；正式 `6.0.0` 只剩餘下集中 LINE／Google 驗收。
 
 > 本專案需要 OpenAI API key。ChatGPT Plus／Pro 訂閱不包含 API 用量，也不能用訂閱 OAuth 取代 server-side API key。
 

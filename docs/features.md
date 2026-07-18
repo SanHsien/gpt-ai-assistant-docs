@@ -39,6 +39,7 @@ title: 功能與指令
 - `記行程 明天下午三點看診`：解析後先顯示草稿，確認才建立。
 - `行程 5分鐘後的測試通知`：`行程` 可作簡短前綴，確認後建立 Calendar event，既有 reminder 會在開始時間推送。
 - `7/20 下午三點牙醫回診`：日期開頭的敘述可直接進行程流程。
+- `每天 22:40 例行檢查`、`每週五下午三點整理週報`：週期開頭的非問句也可直接進行程流程；明確鐘點依個人時區鎖定，確認卡會顯示重複頻率、間隔、次數或截止日。
 - `記行程 明天下午看診`：「下午」太模糊，bot 只追問幾點；下一句延續 durable 結構化草稿，不存原始對話。只有日期沒有時間則視為整天。
 - `星期五`／`週五` 取下一個同名日；`這週二`／`這個星期二`、`下週日`／`下個星期日` 依字面固定，不由模型猜週次。
 - `我的行程`：列出近期行程並附完成、刪除按鈕；提醒訊息也可直接標記完成。
@@ -95,7 +96,7 @@ title: 功能與指令
 
 `5.0.0` 完成行程、任務與提醒的 M1 真實 LINE 閉環。到 `5.13.0` 已接上 Google Tasks 雙向同步與授權回填、Google Calendar inbound 同步（刪除回收＋timed 修改＋提醒去重）、每日天氣訂閱、搜尋建行程、語音建行程、多重／週期提醒及 run trace；並修正 Tasks inbound 水位、跨 instance 同步競態、Tasks 跨日與天氣 DST 排程。
 
-`6.0.0-rc.5` 已完成 durable-only runtime、migration preflight、Postgres bot source、Google provider contract、feature-aware Quick Reply、完整 `指令` 入口、OAuth 語系化、Node 24 container healthcheck、Express 5／Jest 30／ESLint 10 維護基線，以及 Google Tasks dead sync job 安全恢復。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
+`6.0.0-rc.6` 已完成 durable-only runtime、migration preflight、Postgres bot source、Google provider contract、feature-aware Quick Reply、完整 `指令` 入口、OAuth 語系化、Node 24 container healthcheck、Express 5／Jest 30／ESLint 10、Google Tasks dead sync job 安全恢復，以及週期行程當地鐘點校正與可見確認規則。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差剩餘集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
 
 提醒實機驗收已證明：正常到點只推播一次；暫停期間到點不推播，恢復後不補發；恢復後新建立的提醒正常送達。
 

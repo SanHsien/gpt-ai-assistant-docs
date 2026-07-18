@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.6 (2026-07-18)
+
+- Fixed explicit recurring times being shifted when a model double-applied the UTC offset; numeric and Chinese wall-clock forms are now locked to the user's timezone, starting tomorrow when today's occurrence has passed.
+- Daily/weekly/monthly/yearly phrases can enter scheduling directly, and confirmation summaries show recurrence frequency, interval, count, and end date.
+
 ## v6.0.0-rc.5 (2026-07-18)
 
 - Real LINE/Google Tasks acceptance confirmed that granting the Tasks OAuth scope does not enable Google Tasks API. Deployment, configuration, and troubleshooting docs now make the API enablement step explicit.
