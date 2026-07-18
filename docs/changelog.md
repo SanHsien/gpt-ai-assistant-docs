@@ -4,6 +4,12 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0-rc.8（2026-07-18）
+
+- 正式 logs 證明 rc.7 的 request timeout／drain budget 仍不足；根因是 Calendar inbound 的 `singleEvents=true` 會把無截止日週期展開成大量 instances。
+- inbound 改同步 recurring series 本體、忽略 recurrence instances 並只比對 bot 管理事件；單頁上限提高到 2500，減少 serverless 累積 API round trips。
+- 新增 `0019_calendar_sync_query_version.sql`，既有 v1 cursor 只重建一次，不刪除行程。
+
 ## v6.0.0-rc.7（2026-07-18）
 
 - 進階提醒實機送達時發現 Google Calendar inbound 偶發拖滿 Vercel 60 秒；Google token／API 呼叫現在預設 10 秒 timeout。

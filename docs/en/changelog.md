@@ -4,6 +4,12 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.8 (2026-07-18)
+
+- Production logs proved that rc.7 request/drain budgets were not the full fix: Calendar inbound with `singleEvents=true` expanded an open-ended recurrence into many instances.
+- Inbound now syncs recurring series, ignores recurrence instances, and filters to bot-managed events; page size increases to 2500 to reduce accumulated serverless API round trips.
+- Migration `0019_calendar_sync_query_version.sql` rebuilds each legacy v1 cursor once without deleting events.
+
 ## v6.0.0-rc.7 (2026-07-18)
 
 - Live advanced-reminder acceptance exposed an occasional 60-second Google Calendar inbound hang; Google token/API calls now default to a 10-second timeout.

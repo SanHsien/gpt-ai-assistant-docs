@@ -63,10 +63,10 @@ Quick Reply 會隨 bot 回覆出現、由 LINE 排成單列橫向捲動；若希
 1. 建立 Supabase Postgres，使用 serverless transaction pooler URL。
 2. 在 Vercel Production 以 Sensitive env 設定 `DATABASE_URL`、`DATABASE_SSL_CA`、`DATA_ENCRYPTION_KEY`。
 3. 在 fork 的本機目錄把上述三個值放進未追蹤的 `.env`，執行 `npm ci` 與 `npm run db:migrate`。
-4. 執行 `npm run db:preflight`，再到 Supabase SQL Editor 查 `schema_migrations`，確認最後一筆是 `0018_durable_sources.sql`。migration runner 會保存 SHA-256；不要只貼 DDL 而漏掉 migration 紀錄。
+4. 執行 `npm run db:preflight`，再到 Supabase SQL Editor 查 `schema_migrations`，確認最後一筆是 `0019_calendar_sync_query_version.sql`。migration runner 會保存 SHA-256；不要只貼 DDL 而漏掉 migration 紀錄。
 5. 在 Vercel Production 依需要啟用 `ENABLE_SCHEDULE=true`、`ENABLE_TASKS=true` 與 `ENABLE_WEATHER=true`，然後 **Redeploy**。6.0 固定使用 durable queue，沒有 `APP_WEBHOOK_QUEUE`。
 
-`0010` 是天氣訂閱、`0011` 是 Google Tasks outbound、`0012`／`0013` 是 Calendar inbound、`0014`／`0016` 是 Tasks inbound，`0015`／`0017` 收斂提醒索引，`0018` 將 bot source 啟停狀態移入 Postgres。必須先套用 migration，再部署 6.0。
+`0010` 是天氣訂閱、`0011` 是 Google Tasks outbound、`0012`／`0013` 是 Calendar inbound、`0014`／`0016` 是 Tasks inbound，`0015`／`0017` 收斂提醒索引，`0018` 將 bot source 啟停狀態移入 Postgres，`0019` 將 Calendar inbound 改為非展開系列同步並版本化既有 cursor。必須先套用 migration，再部署 6.0。
 
 若啟用 `ENABLE_GOOGLE_TASKS=true`，先確認 Web OAuth client 所屬的同一 Google Cloud project 已啟用 **Google Tasks API**；只有 Tasks scope 不代表 API 已啟用。既有僅授權 Calendar 的帳號必須重新傳送「連結 Google 行事曆」授予 Tasks scope；callback 會自動回填既有未同步任務。若曾因 API 未啟用而失敗，啟用後再次連結，`rc.5` 會安全重排同一 dead sync job，不建立第二筆任務。
 
@@ -87,8 +87,8 @@ Quick Reply 會隨 bot 回覆出現、由 LINE 排成單列橫向捲動；若希
 1. 在 Web OAuth client 所屬的同一 Google Cloud project 啟用 **Google Calendar API**；要同步任務時必須另外啟用 **Google Tasks API**，並到「API 和服務 → 已啟用的 API 和服務」確認兩者都存在。設定 External OAuth consent screen。短期測試可加入 test user；長期 Calendar 存取應發布為 **In Production**，否則授權與 refresh token 會在 7 天後到期。少於 100 位使用者的個人用途可暫不送驗證，但首次授權會顯示警告且有 100 位新使用者上限。
 2. 建立 **Web application** OAuth client，Authorized redirect URI 設為 `https://你的正式網域/oauth/google/callback`。
 3. 在 Vercel Production 設定 `GOOGLE_CLIENT_ID`、`GOOGLE_CLIENT_SECRET`、`GOOGLE_OAUTH_REDIRECT_URI`；全部使用 Sensitive env。
-4. 確認 `0004_google_calendar.sql` 已套用；Tasks outbound 另需 `0011`，Tasks inbound 需 `0014`／`0016`，Calendar inbound 另需 `0012`／`0013`。
-5. 設 `ENABLE_GOOGLE_CALENDAR=true`；需要 Tasks outbound 設 `ENABLE_GOOGLE_TASKS=true`，需要 Tasks inbound 再設 `ENABLE_GOOGLE_TASKS_INBOUND=true`；Calendar timed inbound 則設 `ENABLE_GOOGLE_CALENDAR_INBOUND=true`，然後 Redeploy。6.0 部署前 migration 必須到 `0018`。
+4. 確認 `0004_google_calendar.sql` 已套用；Tasks outbound 另需 `0011`，Tasks inbound 需 `0014`／`0016`，Calendar inbound 另需 `0012`／`0013`／`0019`。
+5. 設 `ENABLE_GOOGLE_CALENDAR=true`；需要 Tasks outbound 設 `ENABLE_GOOGLE_TASKS=true`，需要 Tasks inbound 再設 `ENABLE_GOOGLE_TASKS_INBOUND=true`；Calendar timed inbound 則設 `ENABLE_GOOGLE_CALENDAR_INBOUND=true`，然後 Redeploy。6.0 部署前 migration 必須到 `0019`。
 6. 在 LINE 傳 `連結 Google 行事曆` 或 `連結Google行事曆`，按「前往 Google 授權」。每次新增 scope（例如首次開 Tasks）都必須重新連結；callback 會回填既有未同步任務。授權完成後，新增、`修改行程`、`我的行程`、完成與刪除才會操作 Google Calendar。
 7. 確認每分鐘 worker 已依上一節完成設定。Google 同步預設最多 3 次，成功後才回覆；最終失敗才顯示重試、暫不處理與刪除。Calendar inbound 預設最多需等待約 5–6 分鐘才會在 LINE 查詢反映。
 

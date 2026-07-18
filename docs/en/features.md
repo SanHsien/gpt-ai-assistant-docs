@@ -55,7 +55,7 @@ Capability flags include `ENABLE_IMAGE_GENERATION`, `ENABLE_TRANSCRIPTION`, `ENA
 
 ## Roadmap
 
-`6.0.0-rc.7` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, and bounded Google request/Cron drain times. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
+`6.0.0-rc.8` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, and non-expanded Calendar series sync. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
 
 Real reminder validation confirmed one delivery at the due time, no delivery or backfill while paused, and normal one-time delivery for a new reminder after resuming.
 
