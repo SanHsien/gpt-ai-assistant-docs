@@ -89,11 +89,13 @@ title: 設定
 | `SCHEDULE_MAX_TOKENS` / `SCHEDULE_CONFIRM_TTL` | 行程 JSON token 上限與草稿確認 TTL |
 | `REMINDER_CRON_SECRET` | 至少 32 字元的 Bearer secret；提醒與 Google 同步 worker 共用，Vercel Sensitive env 與 Supabase Vault 必須相同 |
 | `REMINDER_WORKER_MAX_JOBS` | 每次 Cron 最多處理提醒／Calendar 同步／狀態 jobs 數，預設 20 |
+| `REMINDER_WORKER_TIME_BUDGET_MS` | 每次 Cron drain 總預算，預設 45000 毫秒；到期後剩餘 durable jobs 留到下一分鐘 |
 | `REMINDER_CRON_URL` | 只供 `npm run db:configure-reminders` 使用的正式 `/cron/reminders` HTTPS URL |
 | `TASK_LIST_LIMIT` | 「我的任務」每頁筆數，限 1–6，預設 6 |
 | `WEATHER_FORECAST_DAYS` / `WEATHER_CACHE_TTL` | 天氣預報天數（1–7）與 cache TTL |
 | `WEATHER_DAILY_DEFAULT_HOUR` / `WEATHER_DAILY_MAX_PER_RUN` | 每日天氣訂閱的預設推播時刻與每次 cron 上限 |
 | `CALENDAR_INBOUND_INTERVAL` / `CALENDAR_INBOUND_MAX_PER_RUN` | inbound 輪詢的每帳號節流秒數與每次 cron 挑帳號上限 |
+| `GOOGLE_REQUEST_TIMEOUT_MS` | Google token refresh 與 Calendar／Tasks API 單次 timeout，預設 10000 毫秒 |
 | `GOOGLE_TASKS_LIST_ID` | Google Tasks 同步目標清單，預設 `@default` |
 | `OPENAI_PRICE_PER_1K_PROMPT` / `OPENAI_PRICE_PER_1K_COMPLETION` | 選填；設定後 run trace 才估算 `cost_usd`，否則只記 token 數 |
 

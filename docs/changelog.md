@@ -4,6 +4,11 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0-rc.7（2026-07-18）
+
+- 進階提醒實機送達時發現 Google Calendar inbound 偶發拖滿 Vercel 60 秒；Google token／API 呼叫現在預設 10 秒 timeout。
+- Cron drain 預設最多執行 45 秒，剩餘 durable jobs 延到下一分鐘，避免慢 provider 阻塞提醒。
+
 ## v6.0.0-rc.6（2026-07-18）
 
 - 修正週期行程的明確鐘點可能被重複套用 UTC offset；數字與中文鐘點都依使用者時區鎖定，當日已過則從次日開始。

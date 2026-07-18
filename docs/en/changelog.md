@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.7 (2026-07-18)
+
+- Live advanced-reminder acceptance exposed an occasional 60-second Google Calendar inbound hang; Google token/API calls now default to a 10-second timeout.
+- Cron drain defaults to a 45-second budget and defers remaining durable jobs to the next minute so a slow provider cannot block reminders.
+
 ## v6.0.0-rc.6 (2026-07-18)
 
 - Fixed explicit recurring times being shifted when a model double-applied the UTC offset; numeric and Chinese wall-clock forms are now locked to the user's timezone, starting tomorrow when today's occurrence has passed.

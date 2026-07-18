@@ -65,11 +65,13 @@ URL summarization has timeout and size limits, but fetched pages can still conta
 | `SCHEDULE_MAX_TOKENS` / `SCHEDULE_CONFIRM_TTL` | Structured-event token budget and confirmation TTL |
 | `REMINDER_CRON_SECRET` | At least 32 random characters; shared by reminder and Google sync workers, and identical in Vercel Sensitive env and Supabase Vault |
 | `REMINDER_WORKER_MAX_JOBS` | Maximum reminder/Calendar sync/status jobs per Cron call; default 20 |
+| `REMINDER_WORKER_TIME_BUDGET_MS` | Total Cron drain budget; default 45000 ms, with remaining durable jobs deferred to the next minute |
 | `REMINDER_CRON_URL` | Production HTTPS `/cron/reminders` URL used only by `npm run db:configure-reminders` |
 | `TASK_LIST_LIMIT` | Tasks per page, clamped to 1–6; default 6 |
 | `WEATHER_FORECAST_DAYS` / `WEATHER_CACHE_TTL` | Forecast day count (1–7) and cache TTL |
 | `WEATHER_DAILY_DEFAULT_HOUR` / `WEATHER_DAILY_MAX_PER_RUN` | Default daily-weather push hour and per-run cap |
 | `CALENDAR_INBOUND_INTERVAL` / `CALENDAR_INBOUND_MAX_PER_RUN` | Inbound poll per-account throttle (seconds) and per-run account cap |
+| `GOOGLE_REQUEST_TIMEOUT_MS` | Per-request timeout for Google token refresh and Calendar/Tasks APIs; default 10000 ms |
 | `GOOGLE_TASKS_LIST_ID` | Google Tasks sync target list, default `@default` |
 | `OPENAI_PRICE_PER_1K_PROMPT` / `OPENAI_PRICE_PER_1K_COMPLETION` | Optional; run trace estimates `cost_usd` only when both are set |
 

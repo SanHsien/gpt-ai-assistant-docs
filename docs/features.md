@@ -96,7 +96,7 @@ title: 功能與指令
 
 `5.0.0` 完成行程、任務與提醒的 M1 真實 LINE 閉環。到 `5.13.0` 已接上 Google Tasks 雙向同步與授權回填、Google Calendar inbound 同步（刪除回收＋timed 修改＋提醒去重）、每日天氣訂閱、搜尋建行程、語音建行程、多重／週期提醒及 run trace；並修正 Tasks inbound 水位、跨 instance 同步競態、Tasks 跨日與天氣 DST 排程。
 
-`6.0.0-rc.6` 已完成 durable-only runtime、migration preflight、Postgres bot source、Google provider contract、feature-aware Quick Reply、完整 `指令` 入口、OAuth 語系化、Node 24 container healthcheck、Express 5／Jest 30／ESLint 10、Google Tasks dead sync job 安全恢復，以及週期行程當地鐘點校正與可見確認規則。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差剩餘集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
+`6.0.0-rc.7` 已完成 durable-only runtime、Google provider contract、feature-aware Quick Reply、完整 `指令`、Node 24／Express 5／Jest 30／ESLint 10、Tasks dead job 恢復、週期行程當地鐘點校正，以及 Google request／Cron drain time budget。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差剩餘集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
 
 提醒實機驗收已證明：正常到點只推播一次；暫停期間到點不推播，恢復後不補發；恢復後新建立的提醒正常送達。
 
