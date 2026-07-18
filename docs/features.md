@@ -57,7 +57,7 @@ title: 功能與指令
 - `安靜時段 22-8`、`安靜時段 關閉`、`暫停提醒`、`恢復提醒`：設定提醒偏好；暫停期間到點的提醒不補發。
 - `天氣 台北`：查詢現況與預報；無歧義的台灣常用縣市簡稱會自動補足行政區與國家，不必先手動改成「台北市」。`今天天氣 嘉義`、`台北天氣如何` 這類自然語句也能命中（天氣詞在句首或句尾時辨識為隱式天氣意圖，需開啟 `ENABLE_WEATHER`）。
 - `每日天氣 台北 8`、`取消每日天氣`、`我的天氣訂閱`：訂閱每天指定時刻推播天氣（需 `ENABLE_WEATHER_PUSH`），重用同一 scheduler 與 delivery，不另建排程。
-- 語音建行程：手機可直接用 LINE 語音說「記行程 明天下午三點看診」；Windows／macOS LINE 沒有原生語音錄製時，可附加 `.mp3`、`.mp4`、`.mpeg`、`.mpga`、`.m4a`、`.wav` 或 `.webm` 音訊檔。兩者都會走相同的轉錄與草稿確認流程，確認卡會回顯「我聽到：…」。檔案大小上限由 `TRANSCRIPTION_MAX_BYTES` 控制，預設 25 MiB。
+- 語音建行程：手機可直接用 LINE 語音說「記行程 明天下午三點看診」；Windows／macOS LINE 沒有原生語音錄製時，可附加 `.mp3`、`.mp4`、`.mpeg`、`.mpga`、`.m4a`、`.wav` 或 `.webm` 音訊檔。LINE 可能把桌面附件轉成 `audio` webhook，程式會依 Content API header／檔案 magic bytes 保留實際格式；未轉換的 `file` 也支援。兩者都走相同的轉錄與草稿確認流程，確認卡會回顯「我聽到：…」。檔案大小上限由 `TRANSCRIPTION_MAX_BYTES` 控制，預設 25 MiB。
 
 地名有供應商限制：同名不同區（如 `嘉義` 分屬嘉義市／縣）時，bot 會回傳以座標綁定的選項讓你點選，不再靜默選第一筆。`5.13.0` 已以確定性行政中心 fallback 支援 `天氣 嘉義縣`；其他找不到的地點請改用「鄉鎮＋縣市／國家」或附近城市，例如 `天氣 民雄 嘉義縣`。
 
@@ -96,7 +96,7 @@ title: 功能與指令
 
 `5.0.0` 完成行程、任務與提醒的 M1 真實 LINE 閉環。到 `5.13.0` 已接上 Google Tasks 雙向同步與授權回填、Google Calendar inbound 同步（刪除回收＋timed 修改＋提醒去重）、每日天氣訂閱、搜尋建行程、語音建行程、多重／週期提醒及 run trace；並修正 Tasks inbound 水位、跨 instance 同步競態、Tasks 跨日與天氣 DST 排程。
 
-`6.0.0-rc.9` 已完成 durable-only runtime、Google provider contract、feature-aware Quick Reply、完整 `指令`、Node 24／Express 5／Jest 30／ESLint 10、Tasks dead job 恢復、週期行程當地鐘點校正、Google request／Cron drain time budget、Calendar inbound 非展開系列同步，以及 LINE 桌面音訊檔轉錄。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差剩餘集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
+`6.0.0-rc.10` 已完成 durable-only runtime、Google provider contract、feature-aware Quick Reply、完整 `指令`、Node 24／Express 5／Jest 30／ESLint 10、Tasks dead job 恢復、週期行程當地鐘點校正、Google request／Cron drain time budget、Calendar inbound 非展開系列同步，以及 LINE 桌面音訊檔轉錄與實際格式判斷。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援；正式 `6.0.0` 只差剩餘集中 LINE／Google 驗收。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
 
 提醒實機驗收已證明：正常到點只推播一次；暫停期間到點不推播，恢復後不補發；恢復後新建立的提醒正常送達。
 

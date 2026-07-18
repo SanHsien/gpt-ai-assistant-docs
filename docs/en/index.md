@@ -20,9 +20,9 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.9**.
+This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0-rc.10**.
 
-The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.9` also accepts supported audio-file attachments from LINE desktop and routes them through the same transcription and confirmation flow as mobile voice messages. Final `6.0.0` waits for the remaining LINE/Google acceptance checks.
+The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0-rc.10` accepts LINE desktop audio attachments and preserves the actual MP3/WAV/M4A/WebM format from the Content API response. Final `6.0.0` waits for the remaining LINE/Google acceptance checks.
 
 > An OpenAI Platform API key is required. ChatGPT Plus or Pro does not include API usage and cannot replace the server-side API key through subscription OAuth.
 

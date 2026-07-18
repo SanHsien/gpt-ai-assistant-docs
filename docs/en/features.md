@@ -37,7 +37,7 @@ Task commands include `Add task tomorrow submit report #work`, `My tasks`, and f
 
 Weather: use `Weather Taipei` for current conditions and forecasts; unambiguous Taiwan place shorthand is completed automatically, and natural phrases like `Today's weather in Chiayi` are also recognized (weather intent at the start or end of a message, gated on `ENABLE_WEATHER`). Subscribe to a daily push with `Daily weather Taipei 8`, cancel with `Cancel daily weather`, and list with `My weather subscriptions` (requires `ENABLE_WEATHER_PUSH`). For same-name places (e.g. Chiayi City vs County), the bot returns coordinate-bound options to tap instead of silently picking the first match. Known city/county collisions use deterministic administrative-center fallbacks; otherwise an unavailable provider result asks for a township plus county/country or a nearby city.
 
-Voice-created events: on mobile, send a LINE voice message such as "Schedule doctor visit tomorrow at 3pm". Because LINE desktop does not provide native voice recording, attach a supported `.mp3`, `.mp4`, `.mpeg`, `.mpga`, `.m4a`, `.wav`, or `.webm` file instead. Both inputs use the same transcription and draft/confirm flow, and the confirmation card echoes the heard text. `TRANSCRIPTION_MAX_BYTES` defaults to 25 MiB.
+Voice-created events: on mobile, send a LINE voice message such as "Schedule doctor visit tomorrow at 3pm". Because LINE desktop does not provide native voice recording, attach a supported `.mp3`, `.mp4`, `.mpeg`, `.mpga`, `.m4a`, `.wav`, or `.webm` file instead. LINE may emit a desktop attachment as an `audio` webhook; the bot uses the Content API header or file magic bytes to preserve its real format and also accepts an unchanged `file` webhook. Both inputs use the same transcription and draft/confirm flow. `TRANSCRIPTION_MAX_BYTES` defaults to 25 MiB.
 
 ## Default models
 
@@ -55,7 +55,7 @@ Capability flags include `ENABLE_IMAGE_GENERATION`, `ENABLE_TRANSCRIPTION`, `ENA
 
 ## Roadmap
 
-`6.0.0-rc.9` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, non-expanded Calendar series sync, and desktop audio-file transcription. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
+`6.0.0-rc.10` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, non-expanded Calendar series sync, and correctly typed desktop audio transcription. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported; final `6.0.0` waits for the remaining LINE/Google acceptance checks.
 
 Real reminder validation confirmed one delivery at the due time, no delivery or backfill while paused, and normal one-time delivery for a new reminder after resuming.
 

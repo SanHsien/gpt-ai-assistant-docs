@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.10 (2026-07-19)
+
+- Real LINE Windows acceptance showed that desktop WAV/MP3 attachments can be emitted as `audio` webhooks; the old audio path always uploaded them to OpenAI with an `.m4a` name, causing a format mismatch and bad transcription.
+- Audio downloads now choose `.mp3`, `.m4a`, `.wav`, or `.webm` from the LINE Content API `Content-Type`, with magic-byte fallback; the existing `file` allowlist remains supported.
+
 ## v6.0.0-rc.9 (2026-07-18)
 
 - LINE desktop can attach a supported audio file when native voice recording is unavailable; it uses the same transcription, draft, and confirmation flow as a mobile voice message.
