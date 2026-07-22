@@ -102,6 +102,14 @@ Quick Reply 會隨 bot 回覆出現、由 LINE 排成單列橫向捲動；若希
 4. Vercel 改過任何 env 後已 Redeploy，Function Logs 沒有 DB TLS、OAuth 或 cron `401`／`503`。
 5. 在 LINE 重新連結 Google，建立一筆測試行程與一筆測試任務，分別確認 Google Calendar 與 Google Tasks 各只有一筆。
 
+## 由 AI 操作 LINE PC 驗收
+
+維護者可明確授權 AI 操作 LINE Windows 客戶端執行最後的 Production round-trip。這是受監督的桌面驗收，不是可在 CI 盲目重播的固定巨集：每一步都必須重新列出／啟用唯一 LINE 視窗、從最新畫面定位輸入框、一次傳送一則訊息，確認 bot 回覆後才做下一個狀態轉移。
+
+開始前建立驗收清冊，記錄時間窗、唯一測試前綴、本機音訊路徑與產生的資料 id；LINE 結果須再到 Google Calendar／Tasks、Supabase jobs 與 Vercel logs 交叉核對。正式版後要回顧整個 release cycle，而非只清最後一批：刪除可精準界定的 events、tasks、confirmations、相關 jobs／runs／processed events 與本機暫存音訊，並檢查已無 event 的 pending reminder。週期 inbound cron/cursor、真實資料與平台不可控 logs 不刪，也不能宣稱完全沒有痕跡。
+
+完整權威流程見主 repo 的 [`docs/DEVELOPMENT.md`](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/DEVELOPMENT.md#ai-%E6%93%8D%E4%BD%9C-line-pc-%E7%9A%84%E6%AD%A3%E5%BC%8F%E9%A9%97%E6%94%B6%E6%B5%81%E7%A8%8B)。
+
 ## 本機開發
 
 需要 Node.js 24（與 CI、Vercel 及 Docker image 一致）。

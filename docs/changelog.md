@@ -4,6 +4,11 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.1（2026-07-22）
+
+- 修正刪除 LINE／Google Calendar 行程後仍可能殘留待執行提醒；刪除與取消 pending reminder 現在是同一個原子資料庫操作。
+- 補強 AI 操作 LINE PC 的受監督驗收流程：先建清冊、逐步重新定位、跨服務核對，正式版後回溯整個 release cycle 並清除可精準辨識的資料庫與本機測試痕跡。
+
 ## v6.0.0（2026-07-22）
 
 - Supabase durable-only runtime、Google Calendar／Tasks 契約、提醒／週期／搜尋／天氣與桌面音訊均完成集中 LINE／Supabase／Google 驗收。

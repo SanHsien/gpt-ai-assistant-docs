@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.1 (2026-07-22)
+
+- Fixed pending reminder jobs surviving a LINE or Google Calendar event deletion; event deletion and reminder cancellation are now one atomic database operation.
+- Expanded the supervised AI-operated LINE PC acceptance runbook with a test manifest, step-by-step screen relocation, cross-service verification, and release-cycle-wide cleanup of precisely identified database and local artifacts.
+
 ## v6.0.0 (2026-07-22)
 
 - Completed centralized LINE/Supabase/Google acceptance for the durable-only runtime, Google Calendar/Tasks contract, reminders, recurrence, search, weather, and desktop audio.

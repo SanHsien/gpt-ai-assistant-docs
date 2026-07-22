@@ -20,7 +20,7 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0**。
+目前文件對應獨立維護的 [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.1**。
 
 本專案已上線 Supabase durable queue、文字與**語音**建行程、週期／多重提醒、Google Calendar／Tasks 同步、天氣與從搜尋建立行程。`6.0.0` 支援 LINE 桌面音訊附件、依 Content API 回應保留實際 MP3／WAV／M4A／WebM 格式，並容忍「記行程」常見同音辨識；集中 LINE／Supabase／Google 驗收已完成。
 

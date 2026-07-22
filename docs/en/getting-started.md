@@ -95,6 +95,14 @@ Never put real keys, client secrets, database URLs, CAs, encryption keys, or tok
 4. Production was redeployed after every environment change, with no DB TLS, OAuth, or cron `401`/`503` errors.
 5. Reconnect Google in LINE, then create one test event and one test task; verify exactly one item in Google Calendar and Google Tasks respectively.
 
+## AI-operated LINE PC acceptance
+
+The maintainer may explicitly authorize an AI agent to operate the LINE Windows client for the final Production round trip. This is supervised desktop acceptance, not a fixed macro suitable for blind CI replay: every action must rediscover and activate the single intended LINE window, locate controls from a fresh screen capture, send one message, and verify the bot response before the next state transition.
+
+Create an acceptance manifest first with the time window, unique prefixes, local audio paths, and resulting data IDs. Cross-check LINE results in Google Calendar/Tasks, Supabase jobs, and Vercel logs. After release, review the entire release cycle rather than only the last successful batch: remove precisely identified events, tasks, confirmations, related jobs/runs/processed events, and local temporary audio, then check for pending reminders whose event no longer exists. Preserve recurring inbound cron/cursor history, real data, and platform-controlled logs, and never claim that uncontrollable traces were erased.
+
+See the authoritative [`docs/DEVELOPMENT.md` runbook](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/DEVELOPMENT.md#ai-%E6%93%8D%E4%BD%9C-line-pc-%E7%9A%84%E6%AD%A3%E5%BC%8F%E9%A9%97%E6%94%B6%E6%B5%81%E7%A8%8B).
+
 ## Local development
 
 Node.js 24 is required to match CI, Vercel, and the Docker image.

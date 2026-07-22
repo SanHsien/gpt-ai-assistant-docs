@@ -20,7 +20,7 @@ features:
 footer: Independently maintained · based on memochou1993/gpt-ai-assistant · MIT
 ---
 
-This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.0**.
+This documentation covers the independently maintained [SanHsien/gpt-ai-assistant](https://github.com/SanHsien/gpt-ai-assistant) **v6.0.1**.
 
 The project includes durable event creation from **text or voice**, recurring/multiple reminders, Google Calendar/Tasks synchronization, weather, and sourced search-to-event confirmation. `6.0.0` accepts LINE desktop audio attachments, preserves the actual MP3/WAV/M4A/WebM format from the Content API response, and tolerates common Chinese homophones at the start of spoken schedule commands. Centralized LINE/Supabase/Google acceptance is complete.
 
