@@ -4,6 +4,11 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.0.0（2026-07-22）
+
+- Supabase durable-only runtime、Google Calendar／Tasks 契約、提醒／週期／搜尋／天氣與桌面音訊均完成集中 LINE／Supabase／Google 驗收。
+- 最後的 rc.11 桌面音訊測試已產生原始轉錄回顯與正確時間草稿，確認後 LINE 回覆同步成功，Google Calendar 只有一筆對應事件。
+
 ## v6.0.0-rc.11（2026-07-22）
 
 - rc.10 真實 LINE Windows 驗收仍可能把「記行程」辨成「寄行程」並落入一般聊天；rc.11 新增僅限語音句首的常見同音字與「請幫我」前綴容錯。
