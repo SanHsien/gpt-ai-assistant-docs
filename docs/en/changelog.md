@@ -4,6 +4,11 @@ title: Changelog
 
 # Changelog
 
+## v6.0.0-rc.11 (2026-07-22)
+
+- A real LINE Windows check showed that rc.10 could still transcribe the opening `記行程` as a homophone and fall through to general chat. rc.11 normalizes common spoken Chinese homophones and the polite `請幫我` prefix only at the start of audio schedule commands.
+- The raw transcript remains visible for confirmation, and typed text is not rewritten.
+
 ## v6.0.0-rc.10 (2026-07-19)
 
 - Real LINE Windows acceptance showed that desktop WAV/MP3 attachments can be emitted as `audio` webhooks; the old audio path always uploaded them to OpenAI with an `.m4a` name, causing a format mismatch and bad transcription.
