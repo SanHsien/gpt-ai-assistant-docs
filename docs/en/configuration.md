@@ -43,6 +43,7 @@ Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`,
 | `GROUP_REPLY_REQUIRES_MENTION` | false |
 | `ENABLE_SCHEDULE` | false |
 | `ENABLE_REMINDERS` | false |
+| `REMINDER_OFFSETS` | `1440` |
 | `ENABLE_GOOGLE_CALENDAR` | false |
 | `ENABLE_GOOGLE_CALENDAR_INBOUND` | false |
 | `ENABLE_TASKS` | false |
@@ -76,11 +77,11 @@ URL summarization has timeout and size limits, but fetched pages can still conta
 | `GOOGLE_TASKS_LIST_ID` | Google Tasks sync target list, default `@default` |
 | `OPENAI_PRICE_PER_1K_PROMPT` / `OPENAI_PRICE_PER_1K_COMPLETION` | Optional; run trace estimates `cost_usd` only when both are set |
 
-Apply repository migrations `0001`–`0019` in order, then run `npm run db:preflight`. Migration `0017` completes reminder-index consolidation, `0018` moves bot-source activation into Postgres, and `0019` versions the Calendar sync query so legacy cursors rebuild safely. Environment-variable changes do not run migrations automatically and require a redeploy. The per-minute Cron drains due reminders, Google Calendar retries and final status delivery, daily weather subscriptions, and provider inbound polling; these LINE pushes count against the Messaging API quota.
+Apply repository migrations `0001`–`0020` in order, then run `npm run db:preflight`. Migration `0017` completes reminder-index consolidation, `0018` moves bot-source activation into Postgres, `0019` versions the Calendar sync query so legacy cursors rebuild safely, and `0020` switches new accounts to the v3 cursor while existing accounts clear once and rebuild a reminder-capable baseline. Environment-variable changes do not run migrations automatically and require a redeploy. The per-minute Cron drains due reminders, Google Calendar retries and final status delivery, daily weather subscriptions, and provider inbound polling; these LINE pushes count against the Messaging API quota.
 
 Google Tasks shares the Calendar OAuth, but **Google Tasks API must be enabled separately** in the same Google Cloud project as the Web OAuth client; the `tasks` scope does not enable the API. Reconnect Google after enabling the feature so the callback can backfill unsynced tasks. If a disabled API previously produced a dead job, `rc.5` safely revives the same job on reconnect. Supabase remains authoritative; exact due time stays local.
 
-Apply migrations first, configure Cron/OAuth second, then enable flags and redeploy. Version 6.0 always uses durable webhook processing and requires migrations through `0019`; scheduling/reminders need `0002`, `0005`, `0006`, and per-minute Cron; Tasks needs `0007`/`0008`; Google Tasks outbound needs `0011`, inbound needs `0014`/`0016`, the Google Tasks API, renewed OAuth, and per-minute Cron; Calendar inbound needs `0012`/`0013`/`0019` and per-minute Cron; daily weather needs `0010` and per-minute Cron. Every Vercel environment change requires a redeploy.
+Apply migrations first, configure Cron/OAuth second, then enable flags and redeploy. Version 6.0 always uses durable webhook processing and requires migrations through `0020`; scheduling/reminders need `0002`, `0005`, `0006`, and per-minute Cron; Tasks needs `0007`/`0008`; Google Tasks outbound needs `0011`, inbound needs `0014`/`0016`, the Google Tasks API, renewed OAuth, and per-minute Cron; Calendar inbound needs `0012`/`0013`/`0019`/`0020` and per-minute Cron; daily weather needs `0010` and per-minute Cron. Every Vercel environment change requires a redeploy.
 
 ## Google Calendar OAuth
 

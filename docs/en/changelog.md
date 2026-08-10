@@ -4,6 +4,13 @@ title: Changelog
 
 # Changelog
 
+## v6.1.0 (2026-07-29)
+
+- The default lead reminder for events is now **one day ahead** (`REMINDER_OFFSETS=1440`), in addition to the existing at-start reminder. Set the value to an empty string to keep only the at-start reminder.
+- **Tasks with a due date** now get reminders too, sharing the same lead offsets and due-time delivery, and honoring quiet hours, pause/resume, and stale-skip rules. Tasks without a due date are not reminded.
+- After connecting Google Calendar, **existing future one-off (non-recurring, timed) events on your primary calendar are imported**, including ones the bot did not create. Later creates, edits, and deletions on the Google side schedule, reschedule, or cancel the matching LINE reminders. All-day events, recurring series, and non-primary calendars remain unsupported, and no broader authorization scope is required.
+- Maintenance: automated dependency checks and a monthly freshness review were added. Security and compatible updates are handled automatically, while runtime dependencies and major versions still require human review.
+
 ## v6.0.1 (2026-07-22)
 
 - Fixed pending reminder jobs surviving a LINE or Google Calendar event deletion; event deletion and reminder cancellation are now one atomic database operation.

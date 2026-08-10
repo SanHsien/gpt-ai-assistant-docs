@@ -15,8 +15,8 @@ title: 功能與指令
 | 網址 | 選用的 SSRF-safe 網址摘要 |
 | 群組 | 群組啟用／停用，可設定必須 mention 才回覆 |
 | 行程 | 日期開頭自然輸入、確定性星期判斷、模糊時間追問、確認後修改、重疊警告、查詢、完成與刪除；**語音建行程**（手機語音訊息或桌面音訊檔轉錄後走同一流程，確認卡回顯聽到的原文）；**週期行程**（「每週一開會」等，建立、同步 Google 並每個 occurrence 提醒） |
-| 提醒 | 行程開始時主動 LINE Push；整天行程於當日 09:00，durable retry key 防重複；安靜時段、暫停／恢復；**多重（提前）提醒**（`REMINDER_OFFSETS`，如提前 1 小時／1 天） |
-| Google Calendar | OAuth 後以 durable job 冪等新增／更新，每分鐘重試、最終狀態通知，並直接查詢／完成／刪除；**雙向同步**：inbound 以 sync token 輪詢回收 Google 端的刪除與 timed 行程修改，並與 LINE 提醒去重（避免雙重通知） |
+| 提醒 | 行程開始時主動 LINE Push；整天行程於當日 09:00，durable retry key 防重複；安靜時段、暫停／恢復；**多重（提前）提醒**（`REMINDER_OFFSETS`，**預設提前一天**並保留到點提醒）；**有期限任務**也套用同一組提前與到期提醒 |
+| Google Calendar | OAuth 後以 durable job 冪等新增／更新，每分鐘重試、最終狀態通知，並直接查詢／完成／刪除；**雙向同步**：inbound 以 sync token 輪詢回收 Google 端的刪除與 timed 行程修改，並與 LINE 提醒去重（避免雙重通知）；連結後另會**匯入 primary 日曆上既有的未來單次（非週期、有時刻）行程**（含非 bot 建立）並一併提醒 |
 | Google Tasks | **雙向同步**：`ENABLE_GOOGLE_TASKS` 時新增／完成／重開／刪除同步到 Google Tasks；`ENABLE_GOOGLE_TASKS_INBOUND` 時 Google 端的完成／重開、刪除、標題、備註也回收到本地（`due` 不回收，精確期限以本地為準；與 Calendar 共用 OAuth） |
 | 任務 | 獨立保存於 Supabase 助理待辦；支援自然語言期限與優先度、標籤、分頁、今天／明天／本週／下週／逾期／已完篩選、完成／重開／刪除 |
 | 天氣 | Open-Meteo 現況與 1–7 日預報，含台灣縣市簡稱、市／縣座標追問、找不到時的精確地名提示，以及每日訂閱推播 |
@@ -87,7 +87,7 @@ title: 功能與指令
 - `GROUP_REPLY_REQUIRES_MENTION`（預設關）
 - `APP_MAX_PROMPT_AGE`（預設 0，不自動過期）
 - `ENABLE_SCHEDULE`、`ENABLE_REMINDERS`、`ENABLE_GOOGLE_CALENDAR`、`ENABLE_GOOGLE_CALENDAR_INBOUND`、`ENABLE_TASKS`、`ENABLE_GOOGLE_TASKS`、`ENABLE_GOOGLE_TASKS_INBOUND`、`ENABLE_WEATHER`、`ENABLE_WEATHER_PUSH`（程式預設關閉，需完成對應資料庫／Cron／OAuth 前置設定；durable queue 在 6.0 固定啟用）
-- `REMINDER_OFFSETS`（多重提前提醒的分鐘清單，如 `60,1440`；預設空＝只有到點提醒）
+- `REMINDER_OFFSETS`（行程與有期限任務的提前提醒分鐘清單，如 `60,1440`；預設 `1440`＝提前一天並保留到點提醒，設空字串則只留到點提醒）
 - `OPENAI_PRICE_PER_1K_PROMPT`／`OPENAI_PRICE_PER_1K_COMPLETION`（選填；設定後 run trace 才估算 `cost_usd`，否則只記 token 數）
 
 6.0 固定以 Postgres 唯一鍵原子去重 LINE delivery／redelivery；AI 完成結果與 LINE 送達各有 checkpoint，delivery retry 不會重跑付費 AI。DB、必要設定或 migration 不可用時 fail closed，沒有 per-instance legacy fallback。
@@ -96,7 +96,9 @@ title: 功能與指令
 
 `5.0.0` 完成行程、任務與提醒的 M1 真實 LINE 閉環。到 `5.13.0` 已接上 Google Tasks 雙向同步與授權回填、Google Calendar inbound 同步（刪除回收＋timed 修改＋提醒去重）、每日天氣訂閱、搜尋建行程、語音建行程、多重／週期提醒及 run trace；並修正 Tasks inbound 水位、跨 instance 同步競態、Tasks 跨日與天氣 DST 排程。
 
-`6.0.0` 已完成 durable-only runtime、Google provider contract、feature-aware Quick Reply、完整 `指令`、Node 24／Express 5／Jest 30／ESLint 10、Tasks dead job 恢復、週期行程當地鐘點校正、Google request／Cron drain time budget、Calendar inbound 非展開系列同步，以及 LINE 桌面音訊檔轉錄、實際格式判斷與語音句首同音字容錯，並已通過集中 LINE／Supabase／Google 驗收。Calendar all-day／recurrence exception inbound、Google-origin 建立與 Tasks due 回收仍不支援。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
+`6.0.0` 已完成 durable-only runtime、Google provider contract、feature-aware Quick Reply、完整 `指令`、Node 24／Express 5／Jest 30／ESLint 10、Tasks dead job 恢復、週期行程當地鐘點校正、Google request／Cron drain time budget、Calendar inbound 非展開系列同步，以及 LINE 桌面音訊檔轉錄、實際格式判斷與語音句首同音字容錯，並已通過集中 LINE／Supabase／Google 驗收。`6.0.1` 修正刪除行程未同步取消待執行提醒。
+
+`6.1.0`（目前版本）把行程提前提醒預設改為提前一天並保留到點提醒、讓有期限任務套用同一組提醒，並支援**匯入 primary 日曆上既有的未來單次（非週期、有時刻）Google-origin 行程**並建立提醒。Calendar 全天 inbound、週期 series／exception、非 primary 日曆匯入與 Tasks `due` 回收仍不支援。完整清單見 [ROADMAP.md](https://github.com/SanHsien/gpt-ai-assistant/blob/main/docs/ROADMAP.md)。
 
 提醒實機驗收已證明：正常到點只推播一次；暫停期間到點不推播，恢復後不補發；恢復後新建立的提醒正常送達。
 

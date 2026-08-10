@@ -15,8 +15,8 @@ title: Features and Commands
 | URLs | Optional SSRF-guarded URL summarization |
 | Groups | Activate/deactivate and optional mention gating |
 | Events | Date-led input, deterministic weekday resolution, durable clarification, confirmed edits, overlap warnings, list, complete, and delete; **voice-created events** (mobile voice messages or desktop audio files use the same transcription and confirmation flow) |
-| Reminders | Due-time LINE Push; all-day events at 09:00, durable retry-key dedup; quiet hours, pause/resume |
-| Google Calendar | OAuth, idempotent durable create/update, per-minute retries, final status delivery, direct list/complete/delete; **bidirectional sync**: inbound sync-token polling reclaims Google-side deletions and timed edits, with reminder dedup to avoid double notifications |
+| Reminders | Due-time LINE Push; all-day events at 09:00, durable retry-key dedup; quiet hours, pause/resume; **lead reminders** (`REMINDER_OFFSETS`, **one day ahead by default** in addition to the at-start reminder); **tasks with a due date** use the same lead and due reminders |
+| Google Calendar | OAuth, idempotent durable create/update, per-minute retries, final status delivery, direct list/complete/delete; **bidirectional sync**: inbound sync-token polling reclaims Google-side deletions and timed edits, with reminder dedup to avoid double notifications; connecting also **imports existing future one-off (non-recurring, timed) events from the primary calendar** (including ones the bot did not create) and reminds on them |
 | Google Tasks | Outbound create/complete/reopen/delete with `ENABLE_GOOGLE_TASKS`; inbound title, notes, status, and deletion with `ENABLE_GOOGLE_TASKS_INBOUND` (shares Calendar OAuth) |
 | Tasks | Stored in the Supabase assistant task list; natural-language due dates, priority, tags, pagination, filters, complete/reopen/delete |
 | Weather | Open-Meteo current conditions and 1–7 day forecasts, Taiwan place-shorthand completion, same-name place disambiguation, and daily subscription push |
@@ -51,11 +51,13 @@ Voice-created events: on mobile, send a LINE voice message such as "Schedule doc
 
 Capability flags include `ENABLE_IMAGE_GENERATION`, `ENABLE_TRANSCRIPTION`, `ENABLE_VISION`, and `ENABLE_SEARCH`. URL summarization and group mention gating are off by default.
 
-`ENABLE_SCHEDULE`, `ENABLE_REMINDERS`, `ENABLE_GOOGLE_CALENDAR`, `ENABLE_GOOGLE_CALENDAR_INBOUND`, `ENABLE_TASKS`, `ENABLE_GOOGLE_TASKS`, `ENABLE_GOOGLE_TASKS_INBOUND`, `ENABLE_WEATHER`, and `ENABLE_WEATHER_PUSH` are opt-in code defaults and require their database/Cron/OAuth setup. `REMINDER_OFFSETS` optionally adds up to five lead reminders. Version 6.0 always uses Postgres durable deduplication.
+`ENABLE_SCHEDULE`, `ENABLE_REMINDERS`, `ENABLE_GOOGLE_CALENDAR`, `ENABLE_GOOGLE_CALENDAR_INBOUND`, `ENABLE_TASKS`, `ENABLE_GOOGLE_TASKS`, `ENABLE_GOOGLE_TASKS_INBOUND`, `ENABLE_WEATHER`, and `ENABLE_WEATHER_PUSH` are opt-in code defaults and require their database/Cron/OAuth setup. `REMINDER_OFFSETS` sets the lead reminders for events and due tasks (up to five); it defaults to `1440` (one day ahead) alongside the at-start reminder. Version 6.0 always uses Postgres durable deduplication.
 
 ## Roadmap
 
-`6.0.0` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, non-expanded Calendar series sync, correctly typed desktop audio transcription, and spoken Chinese schedule-prefix normalization. Centralized LINE/Supabase/Google acceptance is complete. Calendar all-day/recurrence-exception inbound, Google-origin creation, and Tasks due-date inbound remain unsupported.
+`6.0.0` implements the durable-only runtime, Google provider contract, feature-aware quick replies, grouped `Command`, Node 24/Express 5/Jest 30/ESLint 10, dead Tasks job recovery, deterministic recurring local-time confirmation, bounded Google request/Cron drain times, non-expanded Calendar series sync, correctly typed desktop audio transcription, and spoken Chinese schedule-prefix normalization. Centralized LINE/Supabase/Google acceptance is complete. `6.0.1` fixes event deletion leaving pending reminders behind.
+
+`6.1.0` (current) makes the default lead reminder one day ahead while keeping the at-start reminder, applies the same lead and due reminders to tasks with a due date, and **imports existing future one-off (non-recurring, timed) Google-origin events from the primary calendar** so they are reminded as well. Calendar all-day inbound, recurring series/exceptions, non-primary imports, and Tasks due-date inbound remain unsupported.
 
 Real reminder validation confirmed one delivery at the due time, no delivery or backfill while paused, and normal one-time delivery for a new reminder after resuming.
 
