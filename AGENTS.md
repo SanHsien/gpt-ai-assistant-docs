@@ -33,7 +33,7 @@
 
 ## 維護排程
 
-- 一般變更直接推 `origin/main`，不開功能分支、不開維護 PR（主人 2026-08-22 指示，全庫一致）。只有在需要他人審查、或改動風險高到值得先讓 CI 在 PR 上跑一輪時，才退回 **branch → PR → CI**。
+- 一般變更直接推 `origin/main`，不開功能分支、不開維護 PR（2026-08-22 起，全庫一致）。只有在需要他人審查、或改動風險高到值得先讓 CI 在 PR 上跑一輪時，才退回 **branch → PR → CI**。
 - Dependabot 每週一檢查 npm 與 GitHub Actions。
 - `.github/workflows/dependency-freshness.yml` 每月 1 日另跑一次 `npm run check:dependencies`：把所有直接依賴的已安裝版、範圍內可用版、`npm latest` 與 `npm audit` 併同 open Dependabot PR 寫進 workflow summary。本 repo 停用 issues（問題一律開在主 repo），因此需要維護時以 workflow 紅燈通知，而非維護一張長期 issue。
 - 依賴新鮮度紅了但**這次不該升**時，唯一的正當出口是 `.github/dependency-deferrals.json`：寫
