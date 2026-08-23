@@ -1,0 +1,88 @@
+name: 依賴新鮮度檢查
+
+# Dependabot 一次回答一個套件有沒有新版；這支每月回答「整個文件站的工具鏈落後多少、
+# 有沒有已知漏洞」。只讀不寫：不安裝、不改 manifest、不合併。
+# 本 repo 停用 issues（問題一律開在主 repo），因此通知走 workflow 紅燈 + step summary，
+# 不是像主 repo 那樣維護一張長期 issue。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - package-lock.json
+      - scripts/check-dependency-freshness.mjs
+      - .github/dependabot.yml
+      - .github/workflows/dependency-freshness.yml
+  schedule:
+    # 每月 1 日 10:31（Asia/Taipei）。
+    - cron: "31 2 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: dependency-freshness
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 檢出程式碼
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 安裝鎖定依賴
+        run: npm ci
+
+      - name: 檢查依賴新鮮度
+        id: deps
+        run: |
+          node scripts/check-dependency-freshness.mjs \
+            --github-output \
+            --output dependency-freshness-report.md
+
+      - name: 併入 open Dependabot PR
+        id: tracker
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECKER_NEEDS_ATTENTION: ${{ steps.deps.outputs.needs_attention }}
+        run: |
+          open_prs="$(gh pr list \
+            --state open \
+            --author app/dependabot \
+            --json number,title,url)"
+          open_pr_count="$(jq 'length' <<< "$open_prs")"
+          needs_attention="$CHECKER_NEEDS_ATTENTION"
+          {
+            echo
+            echo "## Open Dependabot PR"
+            echo
+            if [ "$open_pr_count" -eq 0 ]; then
+              echo "- 無"
+            else
+              jq -r '.[] | "- [#\(.number) \(.title)](\(.url))"' <<< "$open_prs"
+              needs_attention="true"
+            fi
+          } >> dependency-freshness-report.md
+          echo "needs_attention=$needs_attention" >> "$GITHUB_OUTPUT"
+          cat dependency-freshness-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 需要維護時讓 workflow 紅燈
+        if: steps.tracker.outputs.needs_attention == 'true'
+        run: |
+          echo "::error::依賴維護待處理，見 workflow summary 與 Dependabot PR。"
+          exit 1

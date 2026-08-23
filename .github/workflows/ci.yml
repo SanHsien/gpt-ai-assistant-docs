@@ -1,0 +1,41 @@
+name: CI
+
+# `docs.yaml` 只在 push 到 main 之後才建置並部署到 Pages，所以在這支之前，
+# 任何 PR（包含 Dependabot 升 vuepress／sass-embedded）都是合併後才知道站台
+# 還能不能建。這支只建置與檢查連結，不碰 Pages、不部署。
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build site and check built links
+        run: npm run build

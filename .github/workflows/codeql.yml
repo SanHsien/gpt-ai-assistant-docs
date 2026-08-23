@@ -1,0 +1,46 @@
+name: CodeQL
+
+# 本 repo 的 JavaScript 不多，但都在處理外部資料：`check-dependency-freshness.mjs`
+# 讀 npm registry 的 JSON、`check-built-links.mjs` 解析建置後的 HTML，VuePress 設定
+# 則決定站台怎麼組。這些是測試問不到的問題類型（注入、路徑處理、不安全的解析），
+# 交給掃描每週問一次。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 5 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: JavaScript security scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:javascript-typescript"
