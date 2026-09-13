@@ -1,0 +1,7 @@
+/node_modules
+/docs/.vuepress/.cache
+/docs/.vuepress/.temp
+/docs/.vuepress/dist
+
+# 依賴新鮮度報告（每次執行重新產生，不追蹤）
+dependency-freshness-report.md
