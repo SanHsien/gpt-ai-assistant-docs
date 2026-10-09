@@ -26,5 +26,10 @@
     "@vuepress/theme-default": "2.0.0-rc.132",
     "sass-embedded": "^1.100.0",
     "vuepress": "2.0.0-rc.30"
+  },
+  "overrides": {
+    "js-yaml@3": {
+      "argparse": "2.0.1"
+    }
   }
 }
