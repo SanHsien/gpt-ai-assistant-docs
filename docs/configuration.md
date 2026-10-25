@@ -25,9 +25,14 @@ title: 設定
 | `APP_API_TIMEOUT` | 9000 ms | 一般 API timeout |
 | `APP_MAX_GROUPS` / `APP_MAX_USERS` | 1000 | 自架容量限制 |
 | `APP_MAX_PROMPT_MESSAGES` | 4 | 上下文訊息數 |
-| `APP_MAX_PROMPT_TOKENS` | 256 | 回覆 token 上限 |
+| `APP_MAX_PROMPT_TOKENS` | 256 | prompt（含歷史訊息）的 token 上限；回覆長度由 `OPENAI_COMPLETION_MAX_TOKENS` 控制 |
 | `APP_MAX_PROMPT_AGE` | 0 | prompt TTL 秒數；0 表示停用 |
 | `APP_INIT_PROMPT` | 空 | 額外系統 prompt |
+| `APP_URL` | 空 | 設定後，瀏覽器開啟部署網址根路徑會導向此網址 |
+| `HUMAN_NAME` / `HUMAN_INIT_PROMPT` | 空 | 使用者稱呼與其額外 prompt |
+| `BOT_NAME` / `BOT_INIT_PROMPT` / `BOT_TONE` | `AI` / 空 / 空 | 機器人名稱、額外 prompt 與語氣 |
+| `BOT_DEACTIVATED` | `false` | 設為 `true` 時，新對話預設不啟用機器人 |
+| `ERROR_MESSAGE_DISABLED` | `false` | 設為 `true` 時，只隱藏逾時與 HTTP 5xx 的錯誤訊息（其他錯誤仍會回覆） |
 
 `APP_LANG` 的可選值不代表相同支援等級。`zh_TW` 是唯一完成 Production 與 LINE 驗收的正式語系；`zh`／`zh_CN` 目前都共用繁體字串，沒有獨立簡體中文包；`en`／`ja` 可啟動，主要指令與 Google OAuth 頁面已有翻譯，但天氣格式與自然語言日期／意圖解析仍偏繁中，因此屬實驗性。未知值會在啟動時明確報錯。英文文件站是部署文件翻譯，不代表英文 bot 已完整驗收。
 
@@ -43,6 +48,8 @@ title: 設定
 | `OPENAI_IMAGE_GENERATION_SIZE` | `1024x1024` |
 | `OPENAI_IMAGE_GENERATION_QUALITY` | `low` |
 | `OPENAI_IMAGE_GENERATION_TIMEOUT` | 55000 ms |
+
+`OPENAI_COMPLETION_MODEL` 與 `OPENAI_VISION_MODEL` 填 `gpt-5` 系列時，程式會改送 `max_completion_tokens`，並略過 frequency／presence penalty（reasoning 模型不接受舊參數）；其他模型維持原本參數。
 
 `OPENAI_BASE_URL` 可用於相容 endpoint，但本 repo 的預設與測試目標仍是 OpenAI direct API。
 
@@ -72,7 +79,7 @@ title: 設定
 | 變數 | 說明 |
 | --- | --- |
 | `SERPAPI_API_KEY` | 啟用搜尋所需 |
-| `SERPAPI_LOCATION` | 預設 `tw` |
+| `SERPAPI_LOCATION` | 預設 `tw`；必須是兩個字母的 ISO 3166-1 alpha-2 國家代碼，填國名（如 `Taiwan`）SerpAPI 會以 400 拒絕，所以 bot 會在送出前擋下並提示正確格式；大小寫與前後空白會自動處理 |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob OIDC 無法使用時的 fallback |
 | `VERCEL_DEPLOY_HOOK_URL` | 啟用「deploy」指令 |
 

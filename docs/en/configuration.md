@@ -31,6 +31,12 @@ Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`,
 
 `OPENAI_BASE_URL` can target a compatible endpoint, but the tested default remains the direct OpenAI API.
 
+`OPENAI_COMPLETION_MODEL` and `OPENAI_VISION_MODEL` accept `gpt-5` models: the app then sends `max_completion_tokens` and omits the frequency/presence penalties, which reasoning models reject. Other models keep the previous parameters.
+
+Optional bot tuning: `APP_URL` (redirect target for the deployment root), `HUMAN_NAME` / `HUMAN_INIT_PROMPT`, `BOT_NAME` (default `AI`) / `BOT_INIT_PROMPT` / `BOT_TONE`, `BOT_DEACTIVATED=true` (new chats start deactivated) and `ERROR_MESSAGE_DISABLED=true` (hides only timeout and HTTP 5xx error messages; other errors are still sent).
+
+`SERPAPI_LOCATION` defaults to `tw` and must be a two-letter ISO 3166-1 alpha-2 country code. A country name such as `Taiwan` would be rejected by SerpAPI with a 400, so the bot catches it before sending and reports the expected format. Case and surrounding spaces are normalized.
+
 ## Feature flags
 
 | Variable | Default |

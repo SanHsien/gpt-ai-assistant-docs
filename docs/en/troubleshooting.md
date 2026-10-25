@@ -46,6 +46,10 @@ For `No blob credentials found`, connect a Vercel Blob store first. If OIDC stil
 
 OpenAI 400 errors commonly mean an unavailable model, unsupported parameters, missing account access, or invalid image options. Remove custom model overrides and test the repository defaults first.
 
+If search fails with an error saying `SERPAPI_LOCATION` needs an ISO 3166-1 alpha-2 country code, set `SERPAPI_LOCATION` to a two-letter code (`tw` for Taiwan), not a country name, then redeploy.
+
+LINE text messages are limited to 5000 characters and 5 messages per reply. Long replies are split automatically, preferably at paragraph, line or sentence breaks; anything beyond 5 messages is truncated (a notice is added on a best-effort basis and may be cut together with other messages in the same reply). To shorten replies, lower `OPENAI_COMPLETION_MAX_TOKENS`.
+
 429 means a rate or quota limit. Check OpenAI API billing/project limits, LINE quotas, and SerpAPI usage. Do not add unlimited automatic retries.
 
 ## A Google Calendar connect command gets a normal chat answer

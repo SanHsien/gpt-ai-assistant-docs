@@ -61,6 +61,14 @@ OPENAI_IMAGE_GENERATION_QUALITY=low
 
 常見原因是模型不存在、帳號沒有權限、參數與模型不相容，或圖片尺寸／品質不支援。先移除自行覆寫的模型環境變數，回到 repo 預設，再依 OpenAI response body 查問題。
 
+## 搜尋失敗，提示 `SERPAPI_LOCATION 需要 ISO 3166-1 alpha-2 國家代碼`
+
+把 Vercel 的 `SERPAPI_LOCATION` 改成兩個字母的國家代碼（台灣是 `tw`），不要填國名，Redeploy 後重試。
+
+## 很長的回覆被分成多則，或結尾出現「訊息過長，已截斷」
+
+LINE 單則文字上限 5000 字元、一次回覆最多 5 則。程式會盡量在段落、換行或句子處切成多則；總數超過 5 則時會截斷（盡力加註，同一次回覆若還有其他訊息，註記可能一併被截掉）。想要較短的回覆可調低 `OPENAI_COMPLETION_MAX_TOKENS`。
+
 ## OpenAI 或 LINE 回 429
 
 表示 rate limit 或 quota。檢查 OpenAI API billing／project limit、LINE quota 與 SerpAPI 額度。可先關閉高成本能力，並避免自動重試無限循環。
