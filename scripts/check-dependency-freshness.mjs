@@ -38,13 +38,33 @@ const VERSION_PATTERN = /^(\d+(?:\.\d+)*)(?:-([0-9A-Za-z.-]+))?/u;
 export function parseVersion(version) {
   const match = VERSION_PATTERN.exec(String(version).trim());
   if (!match) return null;
-  const release = match[1].split('.').map(Number);
-  const prereleaseNumber = match[2] ? Number(/(\d+)$/u.exec(match[2])?.[1]) : null;
   return {
-    release,
-    prerelease: match[2] ?? null,
-    prereleaseNumber: Number.isNaN(prereleaseNumber) ? null : prereleaseNumber,
+    release: match[1].split('.').map(Number),
+    prerelease: match[2] ? match[2].split('.') : null,
   };
+}
+
+// semver 11.4: numeric identifiers compare as numbers and rank below
+// alphanumeric ones, which compare lexically; a shorter list loses a tie.
+// Comparing only the trailing number would rank beta.9 above rc.1.
+function comparePrerelease(left, right) {
+  const length = Math.max(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    const a = left[index];
+    const b = right[index];
+    if (a === undefined) return -1;
+    if (b === undefined) return 1;
+    const aNumeric = /^\d+$/u.test(a);
+    const bNumeric = /^\d+$/u.test(b);
+    if (aNumeric && bNumeric) {
+      if (Number(a) !== Number(b)) return Number(a) > Number(b) ? 1 : -1;
+    } else if (aNumeric !== bNumeric) {
+      return aNumeric ? -1 : 1;
+    } else if (a !== b) {
+      return a > b ? 1 : -1;
+    }
+  }
+  return 0;
 }
 
 export function isNewer(candidate, reference) {
@@ -59,14 +79,11 @@ export function isNewer(candidate, reference) {
     if (a !== b) return a > b;
   }
 
-  // Same release segment: a stable release outranks a pre-release of it, and
-  // rc.30 outranks rc.7.
+  // Same release segment: a stable release outranks any pre-release of it.
   if (!left.prerelease && right.prerelease) return true;
   if (left.prerelease && !right.prerelease) return false;
-  if (left.prereleaseNumber !== null && right.prereleaseNumber !== null) {
-    return left.prereleaseNumber > right.prereleaseNumber;
-  }
-  return false;
+  if (!left.prerelease && !right.prerelease) return false;
+  return comparePrerelease(left.prerelease, right.prerelease) > 0;
 }
 
 export function statusFor({ current, wanted, latest }) {
@@ -130,6 +147,10 @@ function runNpm(args) {
   return spawnSync(command, commandArgs, { encoding: 'utf8' });
 }
 
+function describeNpmError(error) {
+  return [error.code, error.summary].filter(Boolean).join(' ') || JSON.stringify(error);
+}
+
 export function checkDependencies({ npm = runNpm } = {}) {
   // `npm outdated` exits 1 when something is outdated and `npm audit` exits 1 on
   // a finding. Both are answers, not failures.
@@ -143,11 +164,13 @@ export function checkDependencies({ npm = runNpm } = {}) {
     errors.push((outdatedResult.stderr || `npm outdated exited ${outdatedResult.status}`).trim());
   } else {
     try {
-      rows = normalizeOutdated(
-        outdatedResult.stdout.trim() ? JSON.parse(outdatedResult.stdout) : {},
-      );
+      const outdated = outdatedResult.stdout.trim() ? JSON.parse(outdatedResult.stdout) : {};
+      // A registry failure still exits 1 and prints {"error": {...}} on stdout;
+      // read as a package map it becomes one row named "error" that looks "OK".
+      if (outdated.error) throw new Error(describeNpmError(outdated.error));
+      rows = normalizeOutdated(outdated);
     } catch (error) {
-      errors.push(`cannot parse npm outdated: ${error.message}`);
+      errors.push(`npm outdated failed: ${error.message}`);
     }
   }
 
@@ -155,9 +178,12 @@ export function checkDependencies({ npm = runNpm } = {}) {
     errors.push((auditResult.stderr || `npm audit exited ${auditResult.status}`).trim());
   } else {
     try {
-      audit = normalizeAudit(JSON.parse(auditResult.stdout));
+      const parsed = JSON.parse(auditResult.stdout);
+      // Same shape on failure: all-zero counts would pass as a clean audit.
+      if (parsed.error) throw new Error(describeNpmError(parsed.error));
+      audit = normalizeAudit(parsed);
     } catch (error) {
-      errors.push(`cannot parse npm audit: ${error.message}`);
+      errors.push(`npm audit failed: ${error.message}`);
     }
   }
 

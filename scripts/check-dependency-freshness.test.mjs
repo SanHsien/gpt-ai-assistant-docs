@@ -65,3 +65,43 @@ test('a deferred row does not demand maintenance, an undeferred one does', () =>
     false,
   );
 });
+
+import { checkDependencies, isNewer, statusFor } from './check-dependency-freshness.mjs';
+
+test('prerelease channels rank alpha < beta < rc regardless of their counters', () => {
+  assert.equal(isNewer('2.0.0-rc.1', '2.0.0-beta.9'), true);
+  assert.equal(isNewer('2.0.0-beta.9', '2.0.0-rc.1'), false);
+  assert.equal(isNewer('2.0.0-beta.1', '2.0.0-alpha.20'), true);
+  assert.equal(isNewer('2.0.0-rc.30', '2.0.0-rc.7'), true);
+  assert.equal(isNewer('2.0.0', '2.0.0-rc.30'), true);
+  assert.equal(isNewer('2.0.0-rc.30', '2.0.0'), false);
+  assert.equal(isNewer('2.0.0-rc.30', '2.0.0-rc.30'), false);
+});
+
+test('a newer channel is reported as a release to assess', () => {
+  assert.equal(
+    statusFor({ current: '2.0.0-beta.9', wanted: '2.0.0-beta.9', latest: '2.0.0-rc.1' }),
+    'Newer release to assess',
+  );
+});
+
+const okResult = (stdout) => ({ status: 0, stdout, stderr: '' });
+
+test('a registry failure reported as JSON is a failed check, not a clean audit', () => {
+  const failure = JSON.stringify({ error: { code: 'ENOTFOUND', summary: 'request failed' } });
+  const npm = (args) => ({ status: 1, stdout: failure, stderr: '' });
+
+  const { rows, checkError } = checkDependencies({ npm });
+
+  assert.deepEqual(rows, []);
+  assert.match(checkError, /ENOTFOUND/);
+});
+
+test('a clean audit and no outdated packages stay clean', () => {
+  const npm = (args) => okResult(args[0] === 'audit' ? '{"metadata":{"vulnerabilities":{"total":0}}}' : '');
+
+  const result = checkDependencies({ npm });
+
+  assert.equal(result.checkError, '');
+  assert.equal(result.audit.total, 0);
+});
