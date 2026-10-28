@@ -48,3 +48,7 @@
   JSON 與建置後的 HTML，屬於測試問不到的失敗類型。
 - 升級 VuePress 或 theme 前先讀 release notes，並以 `npm run build`（含 `check:links`）確認全部頁面與內部連結仍然成立。
 - **合併任何 PR 前先讀 diff**（包含 Dependabot 開的）：`gh pr diff <編號>`。CI 綠燈證明的是「測試沒紅」，不是「改了什麼、該不該進 main」——lockfile 的連鎖升級、transitive major、跨出宣告範圍的變更，只有讀 diff 看得到。核准或合併訊息要寫出讀到什麼、為什麼可接受。
+
+## 路線圖
+
+- `ROADMAP.md` 是本 repo 後續工作的單一真相源。完成或新增工作時，在同一個 commit 更新它：做完的列刪掉、新工作加進去。不要在其他文件另列待辦。
