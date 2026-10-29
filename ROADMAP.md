@@ -5,13 +5,12 @@
 
 ## 現況
 `SanHsien/gpt-ai-assistant` 的 VuePress 使用者文件站（GitHub Pages），只管安裝、部署、設定與操作說明；產品功能的路線圖在主 repo 的 `docs/ROADMAP.md`，不在這裡（`AGENTS.md`「Source of truth」）。2026-10-29 查 `main`：open PR 0、Dependabot 與 code scanning open alert 皆 0，docs／CodeQL／依賴新鮮度檢查最近一次 success；issues 已停用，問題一律開在主 repo，open issue 數因此「未查到」（查法：`gh pr list -R SanHsien/gpt-ai-assistant-docs`、`gh run list -R SanHsien/gpt-ai-assistant-docs -b main`）。
-文件已同步到主 repo `v6.1.0` 之後的使用者可見變更（`ec11776`）；`configuration.md` 尚未寫主 repo `main` 的預設逾時（`72a54fe`）。
+文件已同步到主 repo `v6.1.0` 之後的使用者可見變更（`ec11776`、`72a54fe` 的預設逾時與優先序）。
 
 ## 近期：可以直接動手
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
 | CI 加跑 `npm test` | `scripts/*.test.mjs` 釘住新鮮度檢查的 prerelease 排序與 registry 失敗不當成乾淨（`22cc65e` 新增 4 條），但 CI 與 Pages workflow 都只跑 `npm ci`＋`npm run build`，這些測試在 GitHub 上從沒跑過 | `.github/workflows/ci.yml` 多一步 `npm test`；在 PR 上故意讓一條測試失敗時 CI 轉紅，恢復後轉綠 | Codex | `.github/workflows/ci.yml:38-41`；`package.json` 的 `test` script |
-| `configuration.md` 補預設逾時與優先序 | 主 repo `main` 已把 OpenAI／LINE／SerpAPI 預設逾時改為 45s／10s／15s，優先序為「個別變數 > `APP_API_TIMEOUT` > 預設」，設定頁仍只寫「一般 API timeout」；`ec11776` 已有「未發版變更也同步進設定頁」的先例 | 中英 `configuration.md` 的逾時說明與主 repo `config/index.js:17`、`:124`、`:145`、`:148` 一致；`npm run build` 綠 | Claude Sonnet | `docs/configuration.md:25`；主 repo `config/index.js:17`、`:124`、`:145`、`:148`；`ec11776` |
 | 連結檢查涵蓋 `#anchor` | `check-built-links.mjs` 遇到 `#` 開頭或帶 fragment 的連結只檢查頁面存在，不檢查錨點，標題改名後頁內連結壞了 build 仍綠 | 新增測試：建置後 HTML 含一個不存在的 `#anchor` 時 `npm run check:links` exit 非 0；現有站台 `npm run build` 仍綠 | Codex | `scripts/check-built-links.mjs:23`；深掃報告（2026-10-26）「不檢查 #anchor 屬功能缺口」 |
 
 ## 中期：等條件成立再做

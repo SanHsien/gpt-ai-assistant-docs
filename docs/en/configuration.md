@@ -14,7 +14,14 @@ All settings use environment variables. The repository [`.env.example`](https://
 | `LINE_CHANNEL_ACCESS_TOKEN` | LINE Messaging API token |
 | `LINE_CHANNEL_SECRET` | LINE signature secret; missing values fail closed |
 
-Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`, `en`, and `ja`; unknown values fail with an actionable startup error. Only `zh_TW` is fully production-supported. `zh`/`zh_CN` currently reuse Traditional Chinese. English and Japanese include the main commands and Google OAuth pages, but remain experimental because weather formatting and natural-language date/intent parsing are Chinese-oriented. The English docs do not imply that the bot localization has passed full English E2E. Other common settings include `APP_WEBHOOK_PATH` (`/webhook`), `APP_API_TIMEOUT` (9000 ms), prompt message/token limits, and `APP_MAX_PROMPT_AGE` (0 disables expiration).
+Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`, `en`, and `ja`; unknown values fail with an actionable startup error. Only `zh_TW` is fully production-supported. `zh`/`zh_CN` currently reuse Traditional Chinese. English and Japanese include the main commands and Google OAuth pages, but remain experimental because weather formatting and natural-language date/intent parsing are Chinese-oriented. The English docs do not imply that the bot localization has passed full English E2E. Other common settings include `APP_WEBHOOK_PATH` (`/webhook`), `APP_API_TIMEOUT` (9000 ms; fallback for external API timeouts when unset), prompt message/token limits, and `APP_MAX_PROMPT_AGE` (0 disables expiration).
+
+External API timeouts follow the precedence order: specific variable > `APP_API_TIMEOUT` > default value:
+- `OPENAI_TIMEOUT`: default 45000 ms (45 seconds)
+- `LINE_TIMEOUT`: default 10000 ms (10 seconds)
+- `SERPAPI_TIMEOUT`: default 15000 ms (15 seconds)
+
+Only positive numbers in milliseconds are accepted; empty, 0, or non-numeric values are treated as unset and fall back to the next level, preventing requests from hanging until Vercel's 60-second limit when an external service does not respond. `OPENAI_IMAGE_GENERATION_TIMEOUT` (default 55000 ms) and `GOOGLE_REQUEST_TIMEOUT_MS` (default 10000 ms) are configured separately and do not fall back to `APP_API_TIMEOUT`.
 
 ## Model defaults
 
@@ -24,6 +31,7 @@ Keep `APP_DEBUG=false` in production. `APP_LANG` accepts `zh_TW`, `zh`, `zh_CN`,
 | `OPENAI_VISION_MODEL` | `gpt-4o` |
 | `OPENAI_TRANSCRIPTION_MODEL` | `gpt-4o-mini-transcribe` |
 | `TRANSCRIPTION_MAX_BYTES` | 26214400 (25 MiB) |
+| `OPENAI_TIMEOUT` | 45000 ms |
 | `OPENAI_IMAGE_GENERATION_MODEL` | `gpt-image-2` |
 | `OPENAI_IMAGE_GENERATION_SIZE` | `1024x1024` |
 | `OPENAI_IMAGE_GENERATION_QUALITY` | `low` |
@@ -57,7 +65,7 @@ Optional bot tuning: `APP_URL` (redirect target for the deployment root), `HUMAN
 | `ENABLE_WEATHER` | false |
 | `ENABLE_WEATHER_PUSH` | false |
 
-Search requires `SERPAPI_API_KEY`. Vercel Blob normally uses OIDC; `BLOB_READ_WRITE_TOKEN` is a fallback. The deploy command requires `VERCEL_DEPLOY_HOOK_URL`.
+`LINE_TIMEOUT` (default 10000 ms) and `SERPAPI_TIMEOUT` (default 15000 ms) configure request timeouts for LINE Messaging API and SerpAPI respectively; both fall back to `APP_API_TIMEOUT` when unset. Search requires `SERPAPI_API_KEY`. Vercel Blob normally uses OIDC; `BLOB_READ_WRITE_TOKEN` is a fallback. The deploy command requires `VERCEL_DEPLOY_HOOK_URL`.
 
 URL summarization has timeout and size limits, but fetched pages can still contain prompt injection; keep it disabled unless needed.
 

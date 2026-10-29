@@ -22,7 +22,7 @@ title: 設定
 | `APP_PORT` | 3000 | 本機 port |
 | `APP_LANG` | `zh_TW` | `zh_TW`（正式支援）、`zh`、`zh_CN`、`en`、`ja` |
 | `APP_WEBHOOK_PATH` | `/webhook` | webhook path |
-| `APP_API_TIMEOUT` | 9000 ms | 一般 API timeout |
+| `APP_API_TIMEOUT` | 9000 ms | 一般 API timeout；未個別設定時作為外部 API 呼叫的後備逾時（優先序見下方逾時說明） |
 | `APP_MAX_GROUPS` / `APP_MAX_USERS` | 1000 | 自架容量限制 |
 | `APP_MAX_PROMPT_MESSAGES` | 4 | 上下文訊息數 |
 | `APP_MAX_PROMPT_TOKENS` | 256 | prompt（含歷史訊息）的 token 上限；回覆長度由 `OPENAI_COMPLETION_MAX_TOKENS` 控制 |
@@ -36,6 +36,13 @@ title: 設定
 
 `APP_LANG` 的可選值不代表相同支援等級。`zh_TW` 是唯一完成 Production 與 LINE 驗收的正式語系；`zh`／`zh_CN` 目前都共用繁體字串，沒有獨立簡體中文包；`en`／`ja` 可啟動，主要指令與 Google OAuth 頁面已有翻譯，但天氣格式與自然語言日期／意圖解析仍偏繁中，因此屬實驗性。未知值會在啟動時明確報錯。英文文件站是部署文件翻譯，不代表英文 bot 已完整驗收。
 
+外部 API 呼叫的逾時優先序為「個別變數 > `APP_API_TIMEOUT` > 預設值」：
+- `OPENAI_TIMEOUT`：預設 45000 ms（45 秒）
+- `LINE_TIMEOUT`：預設 10000 ms（10 秒）
+- `SERPAPI_TIMEOUT`：預設 15000 ms（15 秒）
+
+只接受正數（毫秒），空白、0 或非數字視為未設定並退回下一層級，避免外部服務無回應時請求一路卡到 Vercel 60 秒上限。生圖 `OPENAI_IMAGE_GENERATION_TIMEOUT`（預設 55000 ms）與 `GOOGLE_REQUEST_TIMEOUT_MS`（預設 10000 ms）為獨立設定，不退回 `APP_API_TIMEOUT`。
+
 ## 模型
 
 | 變數 | 預設 |
@@ -44,6 +51,7 @@ title: 設定
 | `OPENAI_VISION_MODEL` | `gpt-4o` |
 | `OPENAI_TRANSCRIPTION_MODEL` | `gpt-4o-mini-transcribe` |
 | `TRANSCRIPTION_MAX_BYTES` | 26214400（25 MiB） |
+| `OPENAI_TIMEOUT` | 45000 ms |
 | `OPENAI_IMAGE_GENERATION_MODEL` | `gpt-image-2` |
 | `OPENAI_IMAGE_GENERATION_SIZE` | `1024x1024` |
 | `OPENAI_IMAGE_GENERATION_QUALITY` | `low` |
@@ -78,6 +86,8 @@ title: 設定
 
 | 變數 | 說明 |
 | --- | --- |
+| `LINE_TIMEOUT` | LINE Messaging API 呼叫逾時，預設 10000 ms；未設定時退回 `APP_API_TIMEOUT` |
+| `SERPAPI_TIMEOUT` | SerpAPI 搜尋逾時，預設 15000 ms；未設定時退回 `APP_API_TIMEOUT` |
 | `SERPAPI_API_KEY` | 啟用搜尋所需 |
 | `SERPAPI_LOCATION` | 預設 `tw`；必須是兩個字母的 ISO 3166-1 alpha-2 國家代碼，填國名（如 `Taiwan`）SerpAPI 會以 400 拒絕，所以 bot 會在送出前擋下並提示正確格式；大小寫與前後空白會自動處理 |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob OIDC 無法使用時的 fallback |
