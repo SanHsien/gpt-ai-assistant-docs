@@ -10,8 +10,6 @@
 ## 近期：可以直接動手
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
-| CI 加跑 `npm test` | `scripts/*.test.mjs` 釘住新鮮度檢查的 prerelease 排序與 registry 失敗不當成乾淨（`22cc65e` 新增 4 條），但 CI 與 Pages workflow 都只跑 `npm ci`＋`npm run build`，這些測試在 GitHub 上從沒跑過 | `.github/workflows/ci.yml` 多一步 `npm test`；在 PR 上故意讓一條測試失敗時 CI 轉紅，恢復後轉綠 | Codex | `.github/workflows/ci.yml:38-41`；`package.json` 的 `test` script |
-| 連結檢查涵蓋 `#anchor` | `check-built-links.mjs` 遇到 `#` 開頭或帶 fragment 的連結只檢查頁面存在，不檢查錨點，標題改名後頁內連結壞了 build 仍綠 | 新增測試：建置後 HTML 含一個不存在的 `#anchor` 時 `npm run check:links` exit 非 0；現有站台 `npm run build` 仍綠 | Codex | `scripts/check-built-links.mjs:23`；深掃報告（2026-10-26）「不檢查 #anchor 屬功能缺口」 |
 
 ## 中期：等條件成立再做
 | 項目 | 觸發條件 | 驗收方式 | 建議執行者 | 證據 |

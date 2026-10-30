@@ -37,5 +37,8 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Run script tests
+        run: npm test
+
       - name: Build site and check built links
         run: npm run build
