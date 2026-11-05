@@ -7,6 +7,8 @@
 `SanHsien/gpt-ai-assistant` 的 VuePress 使用者文件站（GitHub Pages），只管安裝、部署、設定與操作說明；產品功能的路線圖在主 repo 的 `docs/ROADMAP.md`，不在這裡（`AGENTS.md`「Source of truth」）。2026-10-29 查 `main`：open PR 0、Dependabot 與 code scanning open alert 皆 0，docs／CodeQL／依賴新鮮度檢查最近一次 success；issues 已停用，問題一律開在主 repo，open issue 數因此「未查到」（查法：`gh pr list -R SanHsien/gpt-ai-assistant-docs`、`gh run list -R SanHsien/gpt-ai-assistant-docs -b main`）。
 文件已同步到主 repo `v6.1.0` 之後的使用者可見變更（`ec11776`、`72a54fe` 的預設逾時與優先序）。
 
+2026-11-05 依賴維護：將 lock 中的 `sass-embedded`、`sass` 與對應平台套件從 `1.106.1` 更新至 `1.107.1`，處理範圍內可用更新；保留 `package.json` 的 `^1.100.0` 相容性宣告，不以提高下限或延後檢查消除提醒。
+
 ## 近期：可以直接動手
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
