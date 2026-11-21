@@ -1,3 +1,5 @@
+[English](README.en.md) · 繁體中文
+
 # GPT AI Assistant Docs
 
 使用者文件站：<https://sanhsien.github.io/gpt-ai-assistant-docs/>

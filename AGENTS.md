@@ -21,7 +21,8 @@
 2. **只文件化已存在的能力。** 不把 roadmap、規劃中功能或推測寫成已支援。
 3. **影響使用者時才同步。** 安裝、環境變數、指令、設定、限制、整合流程與 upgrade/migration 操作有變才需要更新本 repo。
 4. **保持可執行。** 指令、檔名、環境變數與連結必須能從目前 release / main 驗證。
-5. **修改後建置。** 執行 `npm ci && npm run build`；build failure 不可忽略。
+5. **README 兩個語言一起改。** `README.en.md` 是 `README.md` 的英文鏡像；改其中一份時同步另一份。
+6. **修改後建置。** 執行 `npm ci && npm run build`；build failure 不可忽略。
 
 ## Review 紀錄
 
