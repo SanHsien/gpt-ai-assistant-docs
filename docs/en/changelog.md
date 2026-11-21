@@ -4,6 +4,16 @@ title: Changelog
 
 # Changelog
 
+## v6.2.0 (2026-11-08)
+
+- The LINE deploy command is now **off by default**: even with `VERCEL_DEPLOY_HOOK_URL` set, users only get a "disabled" reply, and no deploy or history reset is triggered. Deploy from your hosting platform instead.
+- Calls to OpenAI, LINE, and SerpAPI now have **default timeouts** (OpenAI 45 s, LINE 10 s, SerpAPI 15 s), so an unresponsive service no longer holds a request until the 60-second Vercel function limit. Precedence is "per-service variable > `APP_API_TIMEOUT` > default"; if you set only `APP_API_TIMEOUT`, it now applies to OpenAI as well.
+- GPT-5 series reasoning models are supported: the bot sends `max_completion_tokens` and drops parameters these models reject, which avoids API 400 errors.
+- Replies longer than LINE's 5000-character limit are split into several messages (up to 5, with a truncation notice beyond that), and a split never breaks an emoji. `SERPAPI_LOCATION` is checked to be a two-letter country code before it is sent.
+- Fixes: a model refusal or an empty message no longer crashes the bot; it returns the refusal text or a clear error. Values set to 0, such as `OPENAI_COMPLETION_TEMPERATURE=0`, are no longer replaced by the defaults.
+- Security: the private-address check for URL summaries now covers more IPv6 forms (IPv4-mapped, NAT64, and others); vulnerable dependencies such as `proxy-addr` (critical) and `follow-redirects` (high) were patched; background queue draining has a time budget (`WORKER_TIME_BUDGET_MS`, 45 s by default).
+- Maintenance: a weekly upstream update check was added, and dependency freshness and `npm audit` stay at zero findings.
+
 ## v6.1.0 (2026-07-29)
 
 - The default lead reminder for events is now **one day ahead** (`REMINDER_OFFSETS=1440`), in addition to the existing at-start reminder. Set the value to an empty string to keep only the at-start reminder.

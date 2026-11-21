@@ -4,6 +4,16 @@ title: 更新摘要
 
 # 更新摘要
 
+## v6.2.0（2026-11-08）
+
+- LINE 的部署指令**預設關閉**：即使設了 `VERCEL_DEPLOY_HOOK_URL`，對話者也只會收到停用回覆，不會觸發部署或清除對話歷史；要部署請改由部署平台操作。
+- 呼叫 OpenAI、LINE、SerpAPI 時加上**預設逾時**（OpenAI 45 秒、LINE 10 秒、SerpAPI 15 秒），外部服務沒回應時不再卡到 Vercel function 的 60 秒上限。優先序是「個別變數 > `APP_API_TIMEOUT` > 預設值」；只設 `APP_API_TIMEOUT` 的部署要注意，它也會套用到 OpenAI。
+- 支援 GPT-5 系列 reasoning 模型：自動改用 `max_completion_tokens`，並略過這些模型不支援的參數，避免 API 回 400。
+- 超過 LINE 5000 字上限的長回覆會自動切成多則（最多 5 則，超過時加截斷提示），切點不會拆開 emoji；`SERPAPI_LOCATION` 送出前先檢查是否為兩碼國家代碼。
+- 修正：模型拒答或回空訊息時不再崩潰，會直接回傳拒答內容或清楚的錯誤；`OPENAI_COMPLETION_TEMPERATURE=0` 等設為 0 的值不再被預設值蓋掉。
+- 安全性：網址摘要的私有位址檢查補上多種 IPv6 寫法（含 IPv4-mapped、NAT64 等）；修補 `proxy-addr`（critical）、`follow-redirects`（high）等依賴弱點；背景佇列處理加上時間預算（`WORKER_TIME_BUDGET_MS`，預設 45 秒）。
+- 維護面：新增每週上游更新檢查，依賴新鮮度與 `npm audit` 維持歸零。
+
 ## v6.1.0（2026-07-29）
 
 - 行程的提前提醒預設改為**提前一天**（`REMINDER_OFFSETS=1440`），並保留原本的到點提醒；想只留到點提醒可把該值設為空字串。
